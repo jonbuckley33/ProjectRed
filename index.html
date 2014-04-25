@@ -3,7 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<!-- jquery -->
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+	<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.1.0.min.js"></script>
 	<!--createjs-->
 	<script src="http://code.createjs.com/easeljs-0.7.1.min.js"></script>
 
@@ -76,23 +76,42 @@
 	<script src='js/box2d/dynamics/joints/b2RevoluteJointDef.js'></script>
 
 	<script src="scripts/startup.js"></script>
+
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+
+	<!-- Optional theme -->
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+
+	<!-- Latest compiled and minified JavaScript -->
+	<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+
+	<link href="public/css/basic.css" rel="stylesheet" type="text/css">
 </head>
 
 <body onLoad="init();">
 	<script type="text/javascript">
 		var CM;
+		var $ = jQuery;
 		function init()
 		{
 			CM = new CanvasManager();
 			CM.init("mainCanvas");
 		}
 	</script>
+
+	<div class="container">
+		<!-- look stuff goes here -->
+		<canvas id="mainCanvas">
+
+		</canvas>
+
+		<script type="text/javascript">
+			$("#mainCanvas").attr("width", $(".container").width());
+			$("#mainCanvas").attr("height", $(".container").height()); 
+		</script>
+	</div>
 	
-	<!-- look stuff goes here -->
-	<canvas id="mainCanvas">
-
-	</canvas>
-
 	<script type="text/javascript">
 		//put test code in here 
 
