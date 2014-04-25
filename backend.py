@@ -23,7 +23,6 @@ handlers = [
             (r'/public/(.*)', tornado.web.StaticFileHandler, {'path': static_path}),
             (r'/scripts/(.*)', tornado.web.StaticFileHandler, {'path' : scripts_path}),
             (r'/js/(.*)', tornado.web.StaticFileHandler, {'path' : js_path}),
-            (r'/lib/(.*)', tornado.web.StaticFileHandler, {'path' : lib_path}),
             (r'/', MainHandler)
 ]
 
