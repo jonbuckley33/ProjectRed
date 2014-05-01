@@ -56,7 +56,7 @@ function GameManager()
 					actors[i].update();
 				}
 
-				//repain
+				//repaint
 				canvasManager.stage.update();
 				break;
 

@@ -5,3 +5,7 @@
 #mainCanvas {
 	border: 1px dotted;
 }
+
+body {
+	padding-top: 55px;
+}
