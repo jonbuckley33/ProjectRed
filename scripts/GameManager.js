@@ -53,7 +53,7 @@ function GameManager()
 				for (var i = 0; i < actors.length; i++)
 				{
 					//gets appropriate placement in canvas
-					actor[i].update();
+					actors[i].update();
 				}
 
 				//repain
