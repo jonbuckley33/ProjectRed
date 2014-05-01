@@ -10,5 +10,5 @@ function Actor(skin, body)
 	}
 
 	//this will help us associate the box2d obj with the actor
-	body.SetUserData(this);
+	this.body.SetUserData(this);
 }
