@@ -17,16 +17,73 @@ function GameManager()
 	var actors = [];
 	var bodies = [];
 
+	var  	b2Vec2 = Box2D.Common.Math.b2Vec2
+        ,	b2BodyDef = Box2D.Dynamics.b2BodyDef
+        ,	b2Body = Box2D.Dynamics.b2Body
+        ,	b2FixtureDef = Box2D.Dynamics.b2FixtureDef
+        ,	b2Fixture = Box2D.Dynamics.b2Fixture
+        ,	b2World = Box2D.Dynamics.b2World
+        ,	b2MassData = Box2D.Collision.Shapes.b2MassData
+        ,	b2PolygonShape = Box2D.Collision.Shapes.b2PolygonShape
+        ,	b2CircleShape = Box2D.Collision.Shapes.b2CircleShape
+        ,	b2DebugDraw = Box2D.Dynamics.b2DebugDraw
+        ;
+
+	var world;
+   
+         
 	this.init = function(cm)
 	{
 		canvasManager = cm;
 		
 		// Define the world
-		var gravity = new b2Vec2(0, -10);
+		var gravity = new b2Vec2(0, 10);
 		var doSleep = true;
 			
 		world = new b2World(gravity, doSleep);
 
+		var fixDef = new b2FixtureDef;
+        fixDef.density = 1.0;
+        fixDef.friction = 0.5;
+        fixDef.restitution = 0.2;
+        
+        var bodyDef = new b2BodyDef;
+         
+        //create ground
+        bodyDef.type = b2Body.b2_staticBody;
+        bodyDef.position.x = 9;
+        bodyDef.position.y = 13;
+        fixDef.shape = new b2PolygonShape;
+        fixDef.shape.SetAsBox(10, 0.5);
+        world.CreateBody(bodyDef).CreateFixture(fixDef);
+
+        //create some objects
+        var circleBodyDef = new b2BodyDef;
+        var circleFixDef = new b2FixtureDef;
+
+        circleBodyDef.type = b2Body.b2_dynamicBody;               
+		circleFixDef.shape = new b2CircleShape(
+           	1 //radius
+        );
+            
+        circleBodyDef.position.x =  10;
+        circleBodyDef.position.y =  10;
+        var actualBody = world.CreateBody(circleBodyDef).CreateFixture(circleFixDef);
+        this.actualBody = actualBody; 
+
+        this.circleBodyDef = circleBodyDef;
+
+         //setup debug draw
+         var debugDraw = new b2DebugDraw();
+			debugDraw.SetSprite(document.getElementById("mainCanvas").getContext("2d"));
+			debugDraw.SetDrawScale(30.0);
+			debugDraw.SetFillAlpha(0.3);
+			debugDraw.SetLineThickness(1.0);
+			debugDraw.SetFlags(b2DebugDraw.e_shapeBit | b2DebugDraw.e_jointBit);
+			world.SetDebugDraw(debugDraw);
+
+		this.bodyDef = bodyDef;
+		this.world = world;
 		//var birdBMP = new createjs.Bitmap("public/images/bird.png");
 
 		createjs.Ticker.addEventListener("tick", this.run);
@@ -34,7 +91,8 @@ function GameManager()
 
 	//60 fps
 	var timeStep = 1.0/60;
-	var iteration = 1;
+	var iteration = 10;
+	var velocitySteps = 10;
 
 	//state machine of game
 	this.run = function()
@@ -47,7 +105,9 @@ function GameManager()
 
 			case gameState.RUNNING:
 				//step world
-				world.Step(this.timeStep, iteration);
+				world.Step(timeStep, iteration, velocitySteps);
+				world.DrawDebugData();
+				world.ClearForces();
 
 				//update positions of actors
 				for (var i = 0; i < actors.length; i++)

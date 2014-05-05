@@ -1,7 +1,6 @@
 function CanvasManager()
 {
     //reference to stage object
-    var stage;
 
     this.init = function(canvasID)
     {
