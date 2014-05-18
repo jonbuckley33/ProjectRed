@@ -6,8 +6,6 @@ function CanvasManager()
     {
         //Create a stage by getting a reference to the canvas
         this.stage = new createjs.Stage(canvasID);
-<<<<<<< HEAD:scripts/startup.js
-=======
         /*//Create a Shape DisplayObject.
         circle = new createjs.Shape();
         circle.graphics.beginFill("red").drawCircle(0, 0, 40);
