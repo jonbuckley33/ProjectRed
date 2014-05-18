@@ -57,10 +57,10 @@ function GameManager()
          
         //create ground
         bodyDef.type = b2Body.b2_staticBody;
-        bodyDef.position.x = 100;
-        bodyDef.position.y = 300;
+        bodyDef.position.x = 1;
+        bodyDef.position.y = 10;
         fixDef.shape = new b2PolygonShape;
-        fixDef.shape.SetAsBox(30, 0.5);
+        fixDef.shape.SetAsBox(5, 0.5);
         world.CreateBody(bodyDef).CreateFixture(fixDef);
 
         //create some objects
@@ -72,12 +72,13 @@ function GameManager()
            	1 //radius
         );
             
-        circleBodyDef.position.x =  100;
-        circleBodyDef.position.y =  10;
+        circleBodyDef.position.x =  1;
+        circleBodyDef.position.y =  1;
         circleBody = world.CreateBody(circleBodyDef).CreateFixture(circleFixDef);
         console.log(circleBody);
 
         body = world.CreateBody(circleBodyDef).CreateFixture(circleFixDef);
+        //body.SetPositionAndAngle(new b2Vec2(1,1), 0);
         this.body = body;
         this.circleBodyDef = circleBodyDef;
 
@@ -91,15 +92,19 @@ function GameManager()
 			world.SetDebugDraw(debugDraw);
 
 		circle = new createjs.Shape();
-		circle.graphics.beginFill("red").drawCircle(0, 0, 50);
+		circle.graphics.beginFill("red").drawCircle(0, 0, converter.gameToCanvas(1));
 		circle.x = circleBodyDef.position.x;
 		circle.y = circleBodyDef.position.y;
 		cm.addChild(circle);
 
+		var actor = new Actor(circle, body);
+		this.actor = actor;
+		actors[0] = actor;
+
 		this.bodyDef = bodyDef;
 		this.world = world;
 		//var birdBMP = new createjs.Bitmap("public/images/bird.png");
-		
+
 		createjs.Ticker.addEventListener("tick", this.run);
 	};
 
@@ -120,8 +125,8 @@ function GameManager()
 			case gameState.RUNNING:
 				//step world
 				world.Step(timeStep, iteration, velocitySteps);
-				circle.x = body.m_body.m_xf.position.x;
-				circle.y = body.m_body.m_xf.position.y;
+				//circle.x = converter.gameToCanvas(body.m_body.m_xf.position.x);
+				//circle.y = converter.gameToCanvas(body.m_body.m_xf.position.y);
 				world.ClearForces();
 
 				//update positions of actors
