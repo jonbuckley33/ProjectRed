@@ -6,8 +6,6 @@ function CanvasManager()
     {
         //Create a stage by getting a reference to the canvas
         this.stage = new createjs.Stage(canvasID);
-<<<<<<< HEAD:scripts/startup.js
-=======
         /*//Create a Shape DisplayObject.
         circle = new createjs.Shape();
         circle.graphics.beginFill("red").drawCircle(0, 0, 40);
@@ -15,7 +13,6 @@ function CanvasManager()
         circle.x = circle.y = 100;
         //Add Shape instance to stage display list.
         this.stage.addChild(circle);
->>>>>>> c03825d72a1fdb432b078f1dec4075977f7fa4ba:scripts/CanvasManager.js
         //Update stage will render next frame
         this.stage.update();*/
 

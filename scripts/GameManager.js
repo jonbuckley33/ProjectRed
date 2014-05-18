@@ -12,6 +12,8 @@ function GameManager()
 	var state = gameState.INITIALIZING;
 	var canvasManager; 
 	var world;
+	var converter = new Converter();
+
 	var circle;
 
 	var actors = [];
@@ -30,7 +32,13 @@ function GameManager()
         ;
 
 	var world;
-   
+	var circle;
+   	var circleBody;
+
+   	this.circleBody = function()
+   	{
+   		return circleBody;
+   	};
          
 	this.init = function(cm)
 	{
@@ -68,8 +76,9 @@ function GameManager()
             
         circleBodyDef.position.x =  10;
         circleBodyDef.position.y =  10;
-        var actualBody = world.CreateBody(circleBodyDef).CreateFixture(circleFixDef);
-        this.actualBody = actualBody; 
+        circleBody = world.CreateBody(circleBodyDef).CreateFixture(circleFixDef);
+        console.log(circleBody);
+        //this.actualBody = actualBody; 
 
         this.circleBodyDef = circleBodyDef;
 
@@ -81,6 +90,12 @@ function GameManager()
 			debugDraw.SetLineThickness(1.0);
 			debugDraw.SetFlags(b2DebugDraw.e_shapeBit | b2DebugDraw.e_jointBit);
 			world.SetDebugDraw(debugDraw);
+
+		circle = new createjs.Shape();
+		circle.graphics.beginFill("red").drawCircle(0, 0, 50);
+		circle.x = circleBodyDef.position.x;
+		circle.y = circleBodyDef.position.y;
+		cm.addChild(circle);
 
 		this.bodyDef = bodyDef;
 		this.world = world;
@@ -115,6 +130,11 @@ function GameManager()
 					//gets appropriate placement in canvas
 					actors[i].update();
 				}
+
+				//console.log(circleBody.m_body.m_xf.position.y);
+				circle.x = 50;
+				circle.y = circleBody.m_body.m_xf.position.y + 20;
+				//console.log(circle);
 
 				//repaint
 				canvasManager.stage.update();
