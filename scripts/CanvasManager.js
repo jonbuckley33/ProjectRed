@@ -18,8 +18,8 @@ function CanvasManager()
 
     }
 
-    this.addChild = function(child) {
-        this.stage.addChild(child);
+    this.addActor = function(child) {
+        this.stage.addChild(child.skin);
     }
 
     this.update = function() { this.stage.update(); }

@@ -80,45 +80,13 @@ function GameManager()
 			
 		world = new b2World(gravity, doSleep);
 
-		var fixDef = new b2FixtureDef;
-        fixDef.density = 1.0;
-        fixDef.friction = 0.5;
-        fixDef.restitution = 0.2;
+		actors = new TestLevel().actors(world, this.convertFixture);
+
+		for (var i = 0; i < actors.length; i ++)
+		{
+			cm.addActor(actors[i]);
+		}
         
-        var bodyDef = new b2BodyDef;
-         
-        //create ground
-        bodyDef.type = b2Body.b2_staticBody;
-        bodyDef.position.x = 1;
-        bodyDef.position.y = 10;
-        fixDef.shape = new b2PolygonShape;
-        fixDef.shape.SetAsBox(5, 0.5);
-        var ground = world.CreateBody(bodyDef).CreateFixture(fixDef);
-
-        var groundShape = this.convertFixture(ground);
-        var rectActor = new Actor(groundShape, ground);
-        console.log(groundShape);
-        cm.addChild(groundShape);
-        
-        actors[1] = rectActor;
-
-        //create some objects
-        circleBodyDef = new b2BodyDef;
-        var circleFixDef = new b2FixtureDef;
-
-        circleBodyDef.type = b2Body.b2_dynamicBody;               
-		circleFixDef.shape = new b2CircleShape(
-           	1 //radius
-        );
-            
-        circleBodyDef.position.x =  1;
-        circleBodyDef.position.y =  1;
-
-        body = world.CreateBody(circleBodyDef).CreateFixture(circleFixDef);
-        //body.SetPositionAndAngle(new b2Vec2(1,1), 0);
-        this.body = body;
-        this.circleBodyDef = circleBodyDef;
-
          //setup debug draw
          var debugDraw = new b2DebugDraw();
 			debugDraw.SetSprite(document.getElementById("mainCanvas").getContext("2d"));
@@ -128,19 +96,6 @@ function GameManager()
 			debugDraw.SetFlags(b2DebugDraw.e_shapeBit | b2DebugDraw.e_jointBit);
 			world.SetDebugDraw(debugDraw);
 
-		/*circle = new createjs.Shape();
-		circle.graphics.beginFill("red").drawCircle(0, 0, converter.gameToCanvas(1));
-		circle.x = circleBodyDef.position.x;
-		circle.y = circleBodyDef.position.y;*/
-
-		var circle = this.convertFixture(body);
-		cm.addChild(circle);
-
-		var actor = new Actor(circle, body);
-		this.actor = actor;
-		actors[0] = actor;
-
-		this.bodyDef = bodyDef;
 		this.world = world;
 		//var birdBMP = new createjs.Bitmap("public/images/bird.png");
 
@@ -165,8 +120,6 @@ function GameManager()
 				//step world
 				world.Step(timeStep, iteration, velocitySteps);
 				//world.DrawDebugData();
-				//circle.x = converter.gameToCanvas(body.m_body.m_xf.position.x);
-				//circle.y = converter.gameToCanvas(body.m_body.m_xf.position.y);
 				world.ClearForces();
 
 				//update positions of actors
@@ -175,9 +128,6 @@ function GameManager()
 					//gets appropriate placement in canvas
 					actors[i].update();
 				}
-
-				//console.log(circleBody.m_body.m_xf.position.y);
-				//console.log(circle);
 
 				//repaint
 				canvasManager.stage.update();
