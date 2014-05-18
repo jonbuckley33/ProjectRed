@@ -38,6 +38,38 @@ function GameManager()
    
    	var body;
          
+   	this.convertFixture = function(body) {
+		var shape = body.GetShape();
+		var fixture;
+
+		switch (shape.GetType())
+		{
+			case 0: //circle
+				var circle = new createjs.Shape();
+				circle.graphics.beginFill("red").drawCircle(0, 0, converter.gameToCanvas(shape.GetRadius()));
+				fixture = circle;
+				break;
+
+			case 1: //rect
+				var rect = new createjs.Shape();
+				var vertices = shape.GetVertices();
+				var width = vertices[2].x - vertices[0].x;
+				var height = vertices[2].y - vertices[0].y;
+
+				var widthPix = converter.gameToCanvas(width);
+				var heightPix = converter.gameToCanvas(height);
+
+				rect.graphics.beginFill("blue").drawRect(-widthPix/2, -heightPix/2, widthPix, heightPix);
+				fixture = rect;
+				break;
+
+			default:
+				break;
+		}
+
+		return fixture;
+	};
+
 	this.init = function(cm)
 	{
 		canvasManager = cm;
@@ -61,7 +93,14 @@ function GameManager()
         bodyDef.position.y = 10;
         fixDef.shape = new b2PolygonShape;
         fixDef.shape.SetAsBox(5, 0.5);
-        world.CreateBody(bodyDef).CreateFixture(fixDef);
+        var ground = world.CreateBody(bodyDef).CreateFixture(fixDef);
+
+        var groundShape = this.convertFixture(ground);
+        var rectActor = new Actor(groundShape, ground);
+        console.log(groundShape);
+        cm.addChild(groundShape);
+        
+        actors[1] = rectActor;
 
         //create some objects
         circleBodyDef = new b2BodyDef;
@@ -74,8 +113,6 @@ function GameManager()
             
         circleBodyDef.position.x =  1;
         circleBodyDef.position.y =  1;
-        circleBody = world.CreateBody(circleBodyDef).CreateFixture(circleFixDef);
-        console.log(circleBody);
 
         body = world.CreateBody(circleBodyDef).CreateFixture(circleFixDef);
         //body.SetPositionAndAngle(new b2Vec2(1,1), 0);
@@ -91,10 +128,12 @@ function GameManager()
 			debugDraw.SetFlags(b2DebugDraw.e_shapeBit | b2DebugDraw.e_jointBit);
 			world.SetDebugDraw(debugDraw);
 
-		circle = new createjs.Shape();
+		/*circle = new createjs.Shape();
 		circle.graphics.beginFill("red").drawCircle(0, 0, converter.gameToCanvas(1));
 		circle.x = circleBodyDef.position.x;
-		circle.y = circleBodyDef.position.y;
+		circle.y = circleBodyDef.position.y;*/
+
+		var circle = this.convertFixture(body);
 		cm.addChild(circle);
 
 		var actor = new Actor(circle, body);
@@ -125,6 +164,7 @@ function GameManager()
 			case gameState.RUNNING:
 				//step world
 				world.Step(timeStep, iteration, velocitySteps);
+				//world.DrawDebugData();
 				//circle.x = converter.gameToCanvas(body.m_body.m_xf.position.x);
 				//circle.y = converter.gameToCanvas(body.m_body.m_xf.position.y);
 				world.ClearForces();
