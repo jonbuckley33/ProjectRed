@@ -15,6 +15,7 @@ function GameManager()
 	var converter = new Converter();
 
 	var circle;
+	var circleBodyDef;
 
 	var actors = [];
 	var bodies = [];
@@ -34,11 +35,8 @@ function GameManager()
 	var world;
 	var circle;
    	var circleBody;
-
-   	this.circleBody = function()
-   	{
-   		return circleBody;
-   	};
+   
+   	var body;
          
 	this.init = function(cm)
 	{
@@ -59,14 +57,14 @@ function GameManager()
          
         //create ground
         bodyDef.type = b2Body.b2_staticBody;
-        bodyDef.position.x = 9;
-        bodyDef.position.y = 13;
+        bodyDef.position.x = 100;
+        bodyDef.position.y = 300;
         fixDef.shape = new b2PolygonShape;
-        fixDef.shape.SetAsBox(10, 0.5);
+        fixDef.shape.SetAsBox(30, 0.5);
         world.CreateBody(bodyDef).CreateFixture(fixDef);
 
         //create some objects
-        var circleBodyDef = new b2BodyDef;
+        circleBodyDef = new b2BodyDef;
         var circleFixDef = new b2FixtureDef;
 
         circleBodyDef.type = b2Body.b2_dynamicBody;               
@@ -74,12 +72,13 @@ function GameManager()
            	1 //radius
         );
             
-        circleBodyDef.position.x =  10;
+        circleBodyDef.position.x =  100;
         circleBodyDef.position.y =  10;
         circleBody = world.CreateBody(circleBodyDef).CreateFixture(circleFixDef);
         console.log(circleBody);
-        //this.actualBody = actualBody; 
 
+        body = world.CreateBody(circleBodyDef).CreateFixture(circleFixDef);
+        this.body = body;
         this.circleBodyDef = circleBodyDef;
 
          //setup debug draw
@@ -100,12 +99,12 @@ function GameManager()
 		this.bodyDef = bodyDef;
 		this.world = world;
 		//var birdBMP = new createjs.Bitmap("public/images/bird.png");
-
+		
 		createjs.Ticker.addEventListener("tick", this.run);
 	};
 
 	//60 fps
-	var timeStep = 1.0/60;
+	var timeStep = 1.0/10;
 	var iteration = 10;
 	var velocitySteps = 10;
 
@@ -121,7 +120,8 @@ function GameManager()
 			case gameState.RUNNING:
 				//step world
 				world.Step(timeStep, iteration, velocitySteps);
-				world.DrawDebugData();
+				circle.x = body.m_body.m_xf.position.x;
+				circle.y = body.m_body.m_xf.position.y;
 				world.ClearForces();
 
 				//update positions of actors
@@ -132,8 +132,6 @@ function GameManager()
 				}
 
 				//console.log(circleBody.m_body.m_xf.position.y);
-				circle.x = 50;
-				circle.y = circleBody.m_body.m_xf.position.y + 20;
 				//console.log(circle);
 
 				//repaint
