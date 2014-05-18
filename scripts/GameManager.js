@@ -29,18 +29,19 @@ function GameManager()
 	var velocitySteps = 2;
 
 	//state machine of game
-	function run()
+	function run(event)
 	{
 		switch (state)
 		{
 			case gameState.INITIALIZING:
-				state = gameState.RUNNING;
+				//repaint
+				canvasManager.stage.update();
 				break;
 
 			case gameState.RUNNING:
 				//step world
-				
-				world.Step(timeStep, iteration, velocitySteps);
+
+				world.Step(event.delta / 1000, iteration, velocitySteps);
 				//world.DrawDebugData();
 				world.ClearForces();
 
@@ -63,17 +64,50 @@ function GameManager()
 		};
 	}
 
+	var blackRect, logo, loadingImage;
+	function showLoadingScreen(decalName) {
+		blackRect = new createjs.Shape();
+		blackRect.graphics.beginFill("white").drawRect(0, 0, canvasManager.getCanvasWidth(), canvasManager.getCanvasHeight());
+		blackRect.x = blackRect.y = 0;
+		canvasManager.stage.addChild(blackRect);
+
+		logo = new createjs.Bitmap("images/" + decalName);
+		logo.x = canvasManager.getCanvasWidth() / 2;
+		logo.y = canvasManager.getCanvasHeight() / 2;
+		canvasManager.stage.addChild(logo);
+
+		/*loadingImage = new createjs.Bitmap("images/loading.gif");
+		loadingImage.x = logo.x + 10;
+		loadingImage.y = logo.y + 50;
+		canvasManager.stage.addChild(loadingImage);*/
+
+		canvasManager.stage.update();
+	}
+
+	function hideLoadingScreen() {
+		canvasManager.stage.removeChild(logo);
+		canvasManager.stage.removeChild(blackRect);
+
+		canvasManager.stage.update();
+	}
+
 	function levelLoaded(levelActors) {
+		//hideLoadingScreen();
+
 		actors = levelActors;
+
 		hero = actors[1];
 		this.hero = hero;
+
 		debug.log("level loaded...");
 
-		//sets up game loop
-		createjs.Ticker.addEventListener("tick", run);
+		//go!
+		state = gameState.RUNNING;
 
+		hideLoadingScreen();
 		debug.log("game loop started.");
-	};
+	}
+
 
 	function heroMove(dirX,dirY)
 	{
@@ -91,9 +125,16 @@ function GameManager()
 		world = new b2World(gravity, doSleep);
 		this.world = world;
 
+		showLoadingScreen("projectred.png");
+
+		//start game loop
+		createjs.Ticker.addEventListener("tick", run);
+
 		//load the level
 		LevelLoader.load("TestLevel.json", levelLoaded, world, canvasManager);
+
  		Keyboard.bind(heroMove);
+
          //setup debug draw
          var debugDraw = new b2DebugDraw();
 			debugDraw.SetSprite(document.getElementById("mainCanvas").getContext("2d"));

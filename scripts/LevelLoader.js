@@ -142,7 +142,7 @@ LevelLoader.load = function(fileName, callback, world, cm)
 				throw "Level Improperly Defined";
 			}
 
-			callback(actors);
+			setTimeout(function() {callback(actors)}, 4000);
 		},
 
 		error : function(data, textStatus) {
