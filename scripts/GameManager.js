@@ -17,6 +17,9 @@ function GameManager()
 	//reference to b2world (physics world)
 	var world;
 
+	//protagonist
+	var hero;
+
 	//array of actors in game
 	var actors = [];
 
@@ -36,6 +39,7 @@ function GameManager()
 
 			case gameState.RUNNING:
 				//step world
+				
 				world.Step(timeStep, iteration, velocitySteps);
 				//world.DrawDebugData();
 				world.ClearForces();
@@ -61,7 +65,8 @@ function GameManager()
 
 	function levelLoaded(levelActors) {
 		actors = levelActors;
-
+		hero = actors[1];
+		this.hero = hero;
 		debug.log("level loaded...");
 
 		//sets up game loop
@@ -70,6 +75,10 @@ function GameManager()
 		debug.log("game loop started.");
 	};
 
+	function heroMove(dirX,dirY)
+	{
+		hero.body.GetBody().ApplyForce(new b2Vec2(dirX*100,dirY*500),hero.body.GetBody().GetWorldCenter());
+	}
 	this.init = function(cm)
 	{
 		canvasManager = cm;
@@ -84,7 +93,7 @@ function GameManager()
 
 		//load the level
 		LevelLoader.load("TestLevel.json", levelLoaded, world, canvasManager);
- 
+ 		Keyboard.bind(heroMove);
          //setup debug draw
          var debugDraw = new b2DebugDraw();
 			debugDraw.SetSprite(document.getElementById("mainCanvas").getContext("2d"));
