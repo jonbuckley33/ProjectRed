@@ -1,13 +1,16 @@
 function Converter()
 {
-	var oneMeter = 50; //pixels
-	this.gameToCanvas = function(x)
-	{
-		return x * oneMeter;
-	}	
+	//Converter class contains static methods for converting from game to canvas 
+	//and visa versa
+}
 
-	this.canvasToGame = function(x)
-	{
-		return x / oneMeter;
-	}
+var oneMeter = 50; //pixels
+Converter.gameToCanvas = function(x)
+{
+	return x * oneMeter;
+}	
+
+Converter.canvasToGame = function(x)
+{
+	return x / oneMeter;
 }

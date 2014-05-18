@@ -1,0 +1,41 @@
+{
+	"name" : "TestLevel",
+	"staticActors" : [
+		{ 
+			"name" : "ground",
+			"fixed" : true,
+			"position" : {"x" : 0, "y": 8},
+			"rotation" : "80",
+			"shape" : {
+						"type" : "rect",
+					  	"width" : 10,
+					  	"height" : 1
+					  }
+		},
+
+		{ 
+			"name" : "block",
+			"fixed" : true,
+			"position" : {"x" : 2, "y": 4},
+			"rotation" : "0",
+			"shape" : {
+						"color" : "yellow",
+						"type" : "rect",
+					  	"width" : 1,
+					  	"height" : 1
+					  }
+		}
+	] ,
+	"dynamicActors" : [
+		{ 
+			"name" : "ball",
+			"fixed" : false,
+			"position" : {"x" : 1, "y" : 1},
+			"shape" : {
+						"color" : "blue",
+						"type" : "circ",
+						"radius" : 1
+					  }
+		}
+	]
+}
