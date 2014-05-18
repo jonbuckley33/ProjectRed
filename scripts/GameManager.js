@@ -87,10 +87,12 @@ function GameManager()
 		canvasManager.stage.update();
 	}
 
+	var ball;
 	function levelLoaded(levelActors) {
 		//hideLoadingScreen();
 
 		actors = levelActors;
+		ball = actors[2];
 
 		debug.log("level loaded...");
 
@@ -100,6 +102,10 @@ function GameManager()
 		hideLoadingScreen();
 		debug.log("game loop started.");
 	}
+
+	this.getBall = function() {
+		return ball;
+	};
 
 	this.init = function(cm)
 	{

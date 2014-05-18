@@ -4,11 +4,11 @@
 		{ 
 			"name" : "ground",
 			"fixed" : true,
-			"position" : {"x" : 0, "y": 8},
-			"rotation" : "80",
+			"position" : {"x" : 1, "y": 8},
+			"rotation" : "0",
 			"shape" : {
 						"type" : "rect",
-					  	"width" : 10,
+					  	"width" : 6,
 					  	"height" : 1
 					  }
 		},
@@ -16,7 +16,7 @@
 		{ 
 			"name" : "block",
 			"fixed" : true,
-			"position" : {"x" : 2, "y": 4},
+			"position" : {"x" : 3, "y": 4},
 			"rotation" : "0",
 			"shape" : {
 						"color" : "yellow",
@@ -34,7 +34,7 @@
 			"shape" : {
 						"color" : "blue",
 						"type" : "circ",
-						"radius" : 1
+						"radius" : 0.5
 					  }
 		}
 	]
