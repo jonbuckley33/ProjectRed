@@ -2,10 +2,13 @@ function CanvasManager()
 {
     //reference to stage object
 
+    var canvas;
     this.init = function(canvasID)
     {
         //Create a stage by getting a reference to the canvas
         this.stage = new createjs.Stage(canvasID);
+        canvas = $("#" + canvasID);
+
         /*//Create a Shape DisplayObject.
         circle = new createjs.Shape();
         circle.graphics.beginFill("red").drawCircle(0, 0, 40);
@@ -23,5 +26,9 @@ function CanvasManager()
     }
 
     this.update = function() { this.stage.update(); }
+
+    this.getCanvasWidth = function () {return canvas.width();}
+
+    this.getCanvasHeight = function () {return canvas.height();}
 }
 
