@@ -5,7 +5,7 @@
 			"name" : "ground",
 			"fixed" : true,
 			"rotation" : "0",
-			"position" : {"x" : 8, "y" : 8},
+			"position" : {"x" : 10, "y" : 8},
 			"shape" : {
 						"type" : "rect",
 					  	"width" : 10,
