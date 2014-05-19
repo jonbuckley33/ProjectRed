@@ -40,7 +40,6 @@ function GameManager()
 
 			case gameState.RUNNING:
 				//step world
-
 				world.Step(event.delta / 1000, iteration, velocitySteps);
 				//world.DrawDebugData();
 				world.ClearForces();
