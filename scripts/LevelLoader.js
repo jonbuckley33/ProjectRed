@@ -2,6 +2,32 @@ function LevelLoader() {
 	//mines level files for data and returns instance of level
 }
 
+var heroImageURL = "../images/exSpriteRun.png"
+
+
+function animLoad (URL,frameW,frameH){
+	var image = new Image();
+	image.src = URL;
+
+	var spritesheet = new createjs.SpriteSheet({
+            images: [image], 
+            frames: {width: frameW, height: frameH, regX: frameW/2, regY: frameH/2}, 
+            animations: {    
+                anim1: [0, 9, "walk"]
+            }
+        });
+
+
+    bmpAnimation = new createjs.BitmapAnimation(spriteSheet);
+
+    bmpAnimation.gotoAndPlay("walk"); 
+
+    bmpAnimation.vX = 4;
+
+    return bmpAnimation;
+
+}
+
 LevelLoader.hydrate = function(actorDef, world, cm) {
 	var bodyDef = new b2BodyDef;
 	var fixDef = new b2FixtureDef;
@@ -11,6 +37,11 @@ LevelLoader.hydrate = function(actorDef, world, cm) {
 	fixDef.density = 1.0;
     fixDef.friction = 0.5;
     fixDef.restitution = 0.2;
+
+    if("americanHero" in actorDef){
+
+    }
+
 
     //extract position
     if ("position" in actorDef) {

@@ -28,7 +28,7 @@ function CanvasManager()
 
         bmpAnimation.gotoAndPlay("walk"); 
 
-        bmpAnimation.direction = 90;
+        bmpAnimation.direction = 160;
         bmpAnimation.vX = 4;
         bmpAnimation.x = 400;
         bmpAnimation.y = 320;
