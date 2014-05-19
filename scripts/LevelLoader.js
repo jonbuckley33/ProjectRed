@@ -2,15 +2,50 @@ function LevelLoader() {
 	//mines level files for data and returns instance of level
 }
 
+var heroImageURL = "../images/exSpriteRun.png"
+
+
+function animLoad (URL,frameW,frameH){
+	var image = new Image();
+	image.src = URL;
+
+	var spritesheet = new createjs.SpriteSheet({
+            images: [image], 
+            frames: {width: frameW, height: frameH, regX: frameW/2, regY: frameH/2}, 
+            animations: {    
+                anim1: [0, 9, "walk"]
+            }
+        });
+
+
+    bmpAnimation = new createjs.BitmapAnimation(spriteSheet);
+
+    bmpAnimation.gotoAndPlay("walk"); 
+
+    bmpAnimation.vX = 4;
+
+    return bmpAnimation;
+
+}
+
+var defaultDensity = 1.0;
+var defaultFriction = 0.1;
+var defaultColor = "blue";
+var defaultRestitution = 0.2;
+
+
 LevelLoader.hydrate = function(actorDef, world, cm) {
 	var bodyDef = new b2BodyDef;
 	var fixDef = new b2FixtureDef;
 	var skin = new createjs.Shape();
 	
 	//we can make these settable properties, but for now, we won't
-	fixDef.density = 1.0;
-    fixDef.friction = 0.1;
-    fixDef.restitution = 0.2;
+    fixDef.restitution = defaultRestitution;
+
+    if("americanHero" in actorDef){
+
+    }
+
 
     //extract position
     if ("position" in actorDef) {
@@ -44,13 +79,27 @@ LevelLoader.hydrate = function(actorDef, world, cm) {
 		//either way, we create a dynamic body here
 
 		bodyDef.type = b2Body.b2_dynamicBody;
+
+		if ("mass" in actorDef) {
+			fixDef.density = actorDef.density;
+		} else {
+			fixDef.density = defaultDensity;
+		}
+
 	} else {
 		bodyDef.type = b2Body.b2_staticBody;
 	}	
-	
+
+	//friction, default .1
+	if ("friction" in actorDef) {
+		fixDef.friction = actorDef.friction;
+	} else {
+		fixDef.friction = defaultFriction;
+	}
+
 	if ("shape" in actorDef) {
 
-		var color = ("color" in actorDef.shape) ? actorDef.shape.color : "red";
+		var color = ("color" in actorDef.shape) ? actorDef.shape.color : defaultColor;
 
 		switch (actorDef.shape.type) 
 		{
@@ -97,12 +146,21 @@ LevelLoader.hydrate = function(actorDef, world, cm) {
 	var body = world.CreateBody(bodyDef).CreateFixture(fixDef);
 	var actor = new Actor(skin, body);
 
-	cm.addActor(actor);
+    if ("class" in actorDef) {
+  		actor.class = actorDef.class;  	
+  		if (actor.class == "americanHero")
+  		{
+  			actor.isHero = true;
+  		} 
+    }
 
 	return actor;
 };
 
-LevelLoader.load = function(fileName, callback, world, cm)
+var defaultGravity = new b2Vec2(0, 10);
+var defaultDoSleep = true;
+
+LevelLoader.load = function(fileName, callback, cm)
 {
 	debug.log("loading level...");
 
@@ -110,9 +168,14 @@ LevelLoader.load = function(fileName, callback, world, cm)
 		url : "levels/" + fileName,
 		success : function(data) { 
 			debug.log("retrieved level data")
+			
+			//generate the physics world
+			var world = new b2World(defaultGravity, defaultDoSleep);
+
 			var level = JSON.parse(data);
 
 			var actors = [];
+			var hero;
 
 			//populate static actors 
 			if ("staticActors" in level) {
@@ -135,6 +198,11 @@ LevelLoader.load = function(fileName, callback, world, cm)
 					var actorDef = level.dynamicActors[i];
 					var actor = LevelLoader.hydrate(actorDef, world, cm);
 
+					//sets hero ref
+					if (actor.isHero) {
+						hero = actor;
+					} 
+
 					actors.push(actor);
 				}
 			} else {
@@ -142,7 +210,11 @@ LevelLoader.load = function(fileName, callback, world, cm)
 				throw "Level Improperly Defined";
 			}
 
-			setTimeout(function() {callback(actors)}, 4000);
+			setTimeout(function() {callback({
+				actors : actors,
+				world : world,
+				hero : hero
+			})}, 4000);
 		},
 
 		error : function(data, textStatus) {
