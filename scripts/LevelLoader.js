@@ -9,7 +9,7 @@ LevelLoader.hydrate = function(actorDef, world, cm) {
 	
 	//we can make these settable properties, but for now, we won't
 	fixDef.density = 1.0;
-    fixDef.friction = 0.5;
+    fixDef.friction = 0.1;
     fixDef.restitution = 0.2;
 
     //extract position
@@ -146,7 +146,7 @@ LevelLoader.load = function(fileName, callback, world, cm)
 		},
 
 		error : function(data, textStatus) {
-			alert("Failed to read data: " + textStatus)
+			throw "Level File Could Not Be Found or Read";
 		}
 	});
 };
