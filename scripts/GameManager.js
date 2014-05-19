@@ -115,14 +115,6 @@ function GameManager()
 	this.init = function(cm)
 	{
 		canvasManager = cm;
-		
-		// Define the world
-		var gravity = new b2Vec2(0, 10);
-		var doSleep = true;
-			
-		//generate the physics world
-		world = new b2World(gravity, doSleep);
-		this.world = world;
 
 		showLoadingScreen("projectred.png");
 
