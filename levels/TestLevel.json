@@ -28,9 +28,9 @@
 			"graphics" : {
 				"type" : "animation",
 				"animationDef" : {
-					"frameWidth" : 50,
-					"frameHeight" : 50,
-					"filepath" : "dummy.png"
+					"frameWidth" : 64,
+					"frameHeight" : 64,
+					"filepath" : "../images/exSpriteRun.png"
 				}
 			}
 		}

@@ -6,22 +6,28 @@ var heroImageURL = "../images/exSpriteRun.png"
 
 
 function animLoad (URL,frameW,frameH){
+
+	//Initialize Image
 	var image = new Image();
 	image.src = URL;
 
+	//Setup Sprite Sheet
 	var spritesheet = new createjs.SpriteSheet({
             images: [image], 
             frames: {width: frameW, height: frameH, regX: frameW/2, regY: frameH/2}, 
-            animations: {    
+            animations: {  
+            	//we can define multiple animations here   
                 anim1: [0, 9, "walk"]
             }
         });
 
-
+	//creates animation skin object
     bmpAnimation = new createjs.BitmapAnimation(spriteSheet);
 
-    bmpAnimation.gotoAndPlay("walk"); 
+    //this will run the specified animation 
+    //bmpAnimation.gotoAndPlay("walk"); 
 
+    //anim switch speed
     bmpAnimation.vX = 4;
 
     return bmpAnimation;
@@ -42,9 +48,74 @@ LevelLoader.hydrate = function(actorDef, world, cm) {
 	//we can make these settable properties, but for now, we won't
     fixDef.restitution = defaultRestitution;
 
-    if("americanHero" in actorDef){
+    if ("graphics" in actorDef){
 
-    }
+    	if ("type" in actorDef.graphics){
+    		if (actorDef.graphics.type = "shape"){
+    			if ("shapeDef" in actorDef.graphics){
+    				var shape = actorDef.graphics.shapeDef;
+    				var color = ("color" in shape) ? shape.color : defaultColor;
+				switch (shape.type) 
+				{
+					case "circ":
+						fixDef.shape = new b2CircleShape(
+		        	   	shape.radius //radius
+		        		); 
+
+					skin.graphics.beginFill(color).drawCircle(0, 0, Converter.gameToCanvas(shape.radius));
+					break;
+
+					case "rect":
+						fixDef.shape = new b2PolygonShape;
+	   					fixDef.shape.SetAsBox(shape.width / 2, shape.height / 2);
+
+	   					var widthPix = Converter.gameToCanvas(shape.width);
+						var heightPix = Converter.gameToCanvas(shape.height);
+
+						skin.graphics.beginFill(color).drawRect(-widthPix/2, -heightPix/2, widthPix, heightPix);
+					break;
+
+					default: 
+					//unit rect
+					fixDef.shape = new b2PolygonShape;
+	   				fixDef.shape.SetAsBox(1, 1);
+
+	   				var widthPix = Converter.gameToCanvas(1);
+					var heightPix = Converter.gameToCanvas(1);
+
+					skin.graphics.beginFill(color).drawRect(-widthPix/2, -heightPix/2, widthPix, heightPix);
+					break;
+				}
+				} else {
+				//default to unit rect
+			fixDef.shape = new b2PolygonShape;
+	   		fixDef.shape.SetAsBox(1, 1);
+
+	   		var widthPix = Converter.gameToCanvas(1);
+			var heightPix = Converter.gameToCanvas(1);
+
+			skin.graphics.beginFill("blue").drawRect(-widthPix/2, -heightPix/2, widthPix, heightPix);
+			}
+
+    			}else{
+    				throw "NO ShapeDef"
+    			}
+    		}else{
+    			if ("animationDef" in actorDef.graphics){
+    				var anim = actorDef.graphics.animationDef;
+    				skin = animLoad(anim.filepath,anim.frameWidth,anim.frameHeight);
+    			}else{
+    				throw "NO AnimationDef"
+    			}
+
+    		}
+    	}else{
+    		throw "WTF is the type"
+    	}
+
+
+    
+
 
 
     //extract position
@@ -95,52 +166,6 @@ LevelLoader.hydrate = function(actorDef, world, cm) {
 		fixDef.friction = actorDef.friction;
 	} else {
 		fixDef.friction = defaultFriction;
-	}
-
-	if ("shape" in actorDef) {
-
-		var color = ("color" in actorDef.shape) ? actorDef.shape.color : defaultColor;
-
-		switch (actorDef.shape.type) 
-		{
-			case "circ":
-				fixDef.shape = new b2CircleShape(
-		           	actorDef.shape.radius //radius
-		        ); 
-
-				skin.graphics.beginFill(color).drawCircle(0, 0, Converter.gameToCanvas(actorDef.shape.radius));
-				break;
-
-			case "rect":
-				fixDef.shape = new b2PolygonShape;
-	   			fixDef.shape.SetAsBox(actorDef.shape.width / 2, actorDef.shape.height / 2);
-
-	   			var widthPix = Converter.gameToCanvas(actorDef.shape.width);
-				var heightPix = Converter.gameToCanvas(actorDef.shape.height);
-
-				skin.graphics.beginFill(color).drawRect(-widthPix/2, -heightPix/2, widthPix, heightPix);
-				break;
-
-			default: 
-				//unit rect
-				fixDef.shape = new b2PolygonShape;
-	   			fixDef.shape.SetAsBox(1, 1);
-
-	   			var widthPix = Converter.gameToCanvas(1);
-				var heightPix = Converter.gameToCanvas(1);
-
-				skin.graphics.beginFill(color).drawRect(-widthPix/2, -heightPix/2, widthPix, heightPix);
-				break;
-		}
-	} else {
-		//default to unit rect
-		fixDef.shape = new b2PolygonShape;
-	   	fixDef.shape.SetAsBox(1, 1);
-
-	   	var widthPix = Converter.gameToCanvas(1);
-		var heightPix = Converter.gameToCanvas(1);
-
-		skin.graphics.beginFill("blue").drawRect(-widthPix/2, -heightPix/2, widthPix, heightPix);
 	}
 
 	var body = world.CreateBody(bodyDef).CreateFixture(fixDef);
