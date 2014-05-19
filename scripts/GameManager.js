@@ -72,7 +72,7 @@ function GameManager()
 		};
 	}
 
-	var blackRect, logo, loadingImage, loadingAnim;
+	var blackRect, logo, loadingAnim;
 	function showLoadingScreen(decalName) {
 		blackRect = new createjs.Shape();
 		blackRect.graphics.beginFill("white").drawRect(0, 0, canvasManager.getCanvasWidth(), canvasManager.getCanvasHeight());
@@ -80,6 +80,9 @@ function GameManager()
 		canvasManager.stage.addChild(blackRect);
 
 		logo = new createjs.Bitmap("images/" + decalName);
+		debug.log(logo.getBounds())
+		logo.regX = 100;
+		logo.regY = 25;
 		logo.x = canvasManager.getCanvasWidth() / 2;
 		logo.y = canvasManager.getCanvasHeight() / 2;
 		canvasManager.stage.addChild(logo);
@@ -87,19 +90,19 @@ function GameManager()
 		var loadImg = new Image();
 		loadImg.src = "public/images/loadbar.png";
 
-		var loadSheetData = {
+		var loadSheet = new createjs.SpriteSheet({
 			images: [loadImg],
-			frames: {width:130, height:30, regX : 65, regY : 15},
-			animations: {load: [0, 10, "load"]}
-		}
-		var loadSheet = new createjs.SpriteSheet(loadSheetData);
-		var loadAnim = new createjs.Sprite(loadSheet, "load");
+			frames: {width: 125, height: 30, regX: 62, regY: 15},
+			animations: {
+				load: [0, 16, "load"]
+			}
+		});
+		loadingAnim = new createjs.Sprite(loadSheet, "load");
 
-		loadAnim.x = logo.x;
-		loadAnim.y = logo.y + 50;
-		loadAnim.gotoAndPlay("load");
-		canvasManager.stage.addChild(loadAnim);
-		//canvasManager.stage.addChild(loadingImage);
+		loadingAnim.x = logo.x;
+		loadingAnim.y = logo.y + 50;
+		loadingAnim.gotoAndPlay("load");
+		canvasManager.stage.addChild(loadingAnim);
 
 		canvasManager.update();
 	}
@@ -107,7 +110,7 @@ function GameManager()
 	function hideLoadingScreen() {
 		canvasManager.stage.removeChild(logo);
 		canvasManager.stage.removeChild(blackRect);
-		//canvasManager.stage.removeChild(loadingImage)
+		canvasManager.stage.removeChild(loadingAnim)
 
 		canvasManager.update();
 	}
