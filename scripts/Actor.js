@@ -2,6 +2,7 @@ function Actor(skin, body)
 {
 	/* copied from online */
 	this.body = body;
+	this.body.GetBody().SetUserData(this);
 	this.skin = skin;
 	this.isHero = false;
 	this.class = undefined;
