@@ -12,20 +12,20 @@ function animLoad (URL,frameW,frameH){
 	image.src = URL;
 
 	//Setup Sprite Sheet
-	var spritesheet = new createjs.SpriteSheet({
-            images: [image], 
-            frames: {width: frameW, height: frameH, regX: frameW/2, regY: frameH/2}, 
-            animations: {  
+	var spriteSheet = new createjs.SpriteSheet({
+		images: [image], 
+		frames: {width: frameW, height: frameH, regX: frameW/2, regY: frameH/2}, 
+		animations: {  
             	//we can define multiple animations here   
-                anim1: [0, 9, "walk"]
+            	anim1: [0, 9, "walk"]
             }
         });
 
 	//creates animation skin object
-    bmpAnimation = new createjs.BitmapAnimation(spriteSheet);
+	bmpAnimation = new createjs.BitmapAnimation(spriteSheet);
 
     //this will run the specified animation 
-    //bmpAnimation.gotoAndPlay("walk"); 
+    bmpAnimation.gotoAndPlay("walk"); 
 
     //anim switch speed
     bmpAnimation.vX = 4;
@@ -45,95 +45,84 @@ LevelLoader.hydrate = function(actorDef, world, cm) {
 	var skin = new createjs.Shape();
 	
 	//we can make these settable properties, but for now, we won't
-    fixDef.restitution = defaultRestitution;
+	fixDef.restitution = defaultRestitution;
 
-<<<<<<< HEAD
-    if ("graphics" in actorDef){
+	if ("graphics" in actorDef){
 
-    	if ("type" in actorDef.graphics){
-    		if (actorDef.graphics.type = "shape"){
-    			if ("shapeDef" in actorDef.graphics){
-    				var shape = actorDef.graphics.shapeDef;
-    				var color = ("color" in shape) ? shape.color : defaultColor;
-				switch (shape.type) 
-				{
-					case "circ":
+		if ("type" in actorDef.graphics){
+			if (actorDef.graphics.type == "shape"){
+				if ("shapeDef" in actorDef.graphics){
+					var shape = actorDef.graphics.shapeDef;
+					var color = ("color" in shape) ? shape.color : defaultColor;
+					switch (shape.type) 
+					{
+						case "circ":
 						fixDef.shape = new b2CircleShape(
-		        	   	shape.radius //radius
-		        		); 
+		        		   	shape.radius //radius
+		        		   	); 
 
-					skin.graphics.beginFill(color).drawCircle(0, 0, Converter.gameToCanvas(shape.radius));
-					break;
+						skin.graphics.beginFill(color).drawCircle(0, 0, Converter.gameToCanvas(shape.radius));
+						break;
 
-					case "rect":
+						case "rect":
 						fixDef.shape = new b2PolygonShape;
-	   					fixDef.shape.SetAsBox(shape.width / 2, shape.height / 2);
+						fixDef.shape.SetAsBox(shape.width / 2, shape.height / 2);
 
-	   					var widthPix = Converter.gameToCanvas(shape.width);
+						var widthPix = Converter.gameToCanvas(shape.width);
 						var heightPix = Converter.gameToCanvas(shape.height);
 
 						skin.graphics.beginFill(color).drawRect(-widthPix/2, -heightPix/2, widthPix, heightPix);
-					break;
+						break;
 
-					default: 
-					//unit rect
-					fixDef.shape = new b2PolygonShape;
-	   				fixDef.shape.SetAsBox(1, 1);
+						default: 
+						//unit rect
+						fixDef.shape = new b2PolygonShape;
+						fixDef.shape.SetAsBox(1, 1);
 
-	   				var widthPix = Converter.gameToCanvas(1);
-					var heightPix = Converter.gameToCanvas(1);
+						var widthPix = Converter.gameToCanvas(1);
+						var heightPix = Converter.gameToCanvas(1);
 
-					skin.graphics.beginFill(color).drawRect(-widthPix/2, -heightPix/2, widthPix, heightPix);
-					break;
+						skin.graphics.beginFill(color).drawRect(-widthPix/2, -heightPix/2, widthPix, heightPix);
+						break;
+					}
+
+				}else{
+					throw "NO ShapeDef"
 				}
-				} else {
-				//default to unit rect
-			fixDef.shape = new b2PolygonShape;
-	   		fixDef.shape.SetAsBox(1, 1);
+			}else{
+				if ("animationDef" in actorDef.graphics){
+					var anim = actorDef.graphics.animationDef;
+					skin = animLoad(anim.filepath,anim.frameWidth,anim.frameHeight);
+					//var widthPix = 50;
+					//var heightPix = 50;
+					//skin.graphics.beginFill(defaultColor).drawRect(-widthPix/2, -heightPix/2, widthPix, heightPix);
+					fixDef.shape = new b2PolygonShape;
+					fixDef.shape.SetAsBox(0.5,0.5);
+				}else{
+					throw "NO AnimationDef"
+				}
 
-	   		var widthPix = Converter.gameToCanvas(1);
-			var heightPix = Converter.gameToCanvas(1);
-
-			skin.graphics.beginFill("blue").drawRect(-widthPix/2, -heightPix/2, widthPix, heightPix);
 			}
-
-    			}else{
-    				throw "NO ShapeDef"
-    			}
-    		}else{
-    			if ("animationDef" in actorDef.graphics){
-    				var anim = actorDef.graphics.animationDef;
-    				skin = animLoad(anim.filepath,anim.frameWidth,anim.frameHeight);
-    			}else{
-    				throw "NO AnimationDef"
-    			}
-
-    		}
-    	}else{
-    		throw "WTF is the type"
-    	}
+		}else{
+			throw "WTF is the type"
+		}
+	}
 
 
-    
-
-
-
-=======
->>>>>>> FETCH_HEAD
     //extract position
     if ("position" in actorDef) {
     	bodyDef.position.x = actorDef.position.x;
-	    bodyDef.position.y = actorDef.position.y;
+    	bodyDef.position.y = actorDef.position.y;
 
-	    skin.x = Converter.gameToCanvas(actorDef.position.x);
-	    skin.y = Converter.gameToCanvas(actorDef.position.y);
+    	skin.x = Converter.gameToCanvas(actorDef.position.x);
+    	skin.y = Converter.gameToCanvas(actorDef.position.y);
     } else {
     	//default to placing in top left
     	bodyDef.position.x = 0;
     	bodyDef.position.y = 0;
 
-	    skin.x = Converter.gameToCanvas(0);
-	    skin.y = Converter.gameToCanvas(0);
+    	skin.x = Converter.gameToCanvas(0);
+    	skin.y = Converter.gameToCanvas(0);
     }
 
     //extract rotation
@@ -147,7 +136,7 @@ LevelLoader.hydrate = function(actorDef, world, cm) {
     }
     
     //define the body to be static or dynamic
-	if (!("fixed" in actorDef) || !actorDef.fixed) {
+    if (!("fixed" in actorDef) || !actorDef.fixed) {
 		//the def doesn't contain whether fixed is defined, or it is set to false
 		//either way, we create a dynamic body here
 
@@ -173,13 +162,13 @@ LevelLoader.hydrate = function(actorDef, world, cm) {
 	var body = world.CreateBody(bodyDef).CreateFixture(fixDef);
 	var actor = new Actor(skin, body);
 
-    if ("class" in actorDef) {
-  		actor.class = actorDef.class;  	
-  		if (actor.class == "americanHero")
-  		{
-  			actor.isHero = true;
-  		} 
-    }
+	if ("class" in actorDef) {
+		actor.class = actorDef.class;  	
+		if (actor.class == "americanHero")
+		{
+			actor.isHero = true;
+		} 
+	}
 
 	return actor;
 };

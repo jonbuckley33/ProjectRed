@@ -20,6 +20,21 @@
 	] ,
 	"dynamicActors" : [
 		{ 
+			"name" : "ground",
+			"fixed" : true,
+			"rotation" : "0",
+			"friction" : 0.1,
+			"position" : {"x" : 12, "y" : 5},
+			"graphics" : {
+				"type" : "shape",
+				"shapeDef" : {
+						"type" : "rect",
+					  	"width" : 1,
+					  	"height" : 1
+					  }
+			}
+		},
+		{ 
 			"name" : "ball",
 			"fixed" : false,
 			"position" : {"x" : 10, "y" : 1},

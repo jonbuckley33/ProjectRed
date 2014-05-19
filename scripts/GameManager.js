@@ -117,6 +117,7 @@ function GameManager()
 
 	var testActor;
 	function levelLoaded(levelData) {
+		actors = levelData.actors;
 		hero = levelData.hero;
 		world = levelData.world;
 
@@ -171,27 +172,18 @@ function GameManager()
 		createjs.Ticker.addEventListener("tick", run);
 
 		//load the level
-		LevelLoader.load("TestLevel_deprecated.json", levelLoaded, canvasManager);
+		LevelLoader.load("TestLevel.json", levelLoaded, canvasManager);
 
  		Keyboard.bind(heroMove);
 
          //setup debug draw
-<<<<<<< HEAD
-   //       var debugDraw = new b2DebugDraw();
-			// debugDraw.SetSprite(document.getElementById("mainCanvas").getContext("2d"));
-			// debugDraw.SetDrawScale(30.0);
-			// debugDraw.SetFillAlpha(0.3);
-			// debugDraw.SetLineThickness(1.0);
-			// debugDraw.SetFlags(b2DebugDraw.e_shapeBit | b2DebugDraw.e_jointBit);
-			// world.SetDebugDraw(debugDraw);
-=======
          var debugDraw = new b2DebugDraw();
 			debugDraw.SetSprite(document.getElementById("mainCanvas").getContext("2d"));
 			debugDraw.SetDrawScale(30.0);
 			debugDraw.SetFillAlpha(0.3);
 			debugDraw.SetLineThickness(1.0);
 			debugDraw.SetFlags(b2DebugDraw.e_shapeBit | b2DebugDraw.e_jointBit);
->>>>>>> FETCH_HEAD
+
 	};
 
 	this.pause = function()
