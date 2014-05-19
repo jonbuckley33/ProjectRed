@@ -1,0 +1,32 @@
+{
+	"name" : "TestLevel",
+	"gravity" : 10.0,
+	"staticActors" : [
+		{ 
+			"name" : "ground",
+			"fixed" : true,
+			"rotation" : "0",
+			"friction" : 0.1,
+			"position" : {"x" : 10, "y" : 8},
+			"shape" : {
+					"type" : "rect",
+				  	"width" : 10,
+				 	"height" : 1
+				 }
+		}
+	] ,
+	"dynamicActors" : [
+		{ 
+			"name" : "ball",
+			"fixed" : false,
+			"position" : {"x" : 10, "y" : 1},
+			"density" : 1.0,
+			"class" : "americanHero",
+			"shape" : {
+					"type" : "rect",
+				  	"width" : 1,
+				 	"height" : 1
+				 }
+		}
+	]
+}

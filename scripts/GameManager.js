@@ -23,6 +23,9 @@ function GameManager()
 	//array of actors in game
 	var actors = [];
 
+	//actors to delete on next update
+	var toDestroyActors = [];
+
 	//framerate
 	var timeStep = 1.0/25;
 	var iteration = 5;
@@ -39,6 +42,12 @@ function GameManager()
 				break;
 
 			case gameState.RUNNING:
+				//kill the old actors
+				for (var i = 0; i < toDestroyActors.length; i++) {
+					world.DestroyBody(toDestroyActors[i].body);
+				}
+				toDestroyActors = [];
+
 				//step world
 				world.Step(event.delta / 1000, iteration, velocitySteps);
 				//world.DrawDebugData();
@@ -90,15 +99,14 @@ function GameManager()
 		canvasManager.stage.update();
 	}
 
+	var testActor;
 	function levelLoaded(levelData) {
 
 		//sets levelActors
 		actors = levelData.actors;
 
 		hero = levelData.hero;
-		this.hero = hero;
-
-		this.world = levelData.world;
+		world = levelData.world;
 
 		//cycle through actors and add them to the canvas
 		hideLoadingScreen();
@@ -106,6 +114,8 @@ function GameManager()
 		for (var i = 0; i < actors.length; i++) {
 			canvasManager.addActor(actors[i]);
 		}
+
+		testActor = actors[1];
 
 		debug.log("level loaded...");
 
@@ -116,10 +126,28 @@ function GameManager()
 	}
 
 
+	this.getTestActor = function() {
+		return testActor;
+	};
+
 	function heroMove(dirX,dirY)
 	{
 		hero.body.GetBody().ApplyForce(new b2Vec2(dirX*100,dirY*500),hero.body.GetBody().GetWorldCenter());
 	}
+
+	this.removeActor = function(actor) {
+		//clear the skin from the stage
+		canvasManager.removeActor(actor);
+
+		//remove from update list, and push onto destroy list
+		var index = actors.indexOf(actor);
+		if (index > -1) {
+    		actors.splice(index, 1);
+		}
+
+		//delete body later
+		toDestroyActors.push(actor);
+	};
 
 	this.init = function(cm)
 	{
@@ -131,7 +159,7 @@ function GameManager()
 		createjs.Ticker.addEventListener("tick", run);
 
 		//load the level
-		LevelLoader.load("TestLevel.json", levelLoaded, canvasManager);
+		LevelLoader.load("TestLevel_deprecated.json", levelLoaded, canvasManager);
 
  		Keyboard.bind(heroMove);
 
@@ -142,7 +170,6 @@ function GameManager()
 			debugDraw.SetFillAlpha(0.3);
 			debugDraw.SetLineThickness(1.0);
 			debugDraw.SetFlags(b2DebugDraw.e_shapeBit | b2DebugDraw.e_jointBit);
-			world.SetDebugDraw(debugDraw);
 	};
 
 	this.pause = function()

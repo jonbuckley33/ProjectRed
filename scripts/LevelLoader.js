@@ -25,7 +25,6 @@ function animLoad (URL,frameW,frameH){
     bmpAnimation.vX = 4;
 
     return bmpAnimation;
-
 }
 
 var defaultDensity = 1.0;
@@ -41,11 +40,6 @@ LevelLoader.hydrate = function(actorDef, world, cm) {
 	
 	//we can make these settable properties, but for now, we won't
     fixDef.restitution = defaultRestitution;
-
-    if("americanHero" in actorDef){
-
-    }
-
 
     //extract position
     if ("position" in actorDef) {
