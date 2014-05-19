@@ -146,7 +146,13 @@ LevelLoader.hydrate = function(actorDef, world, cm) {
 	var body = world.CreateBody(bodyDef).CreateFixture(fixDef);
 	var actor = new Actor(skin, body);
 
-	//cm.addActor(actor);
+    if ("class" in actorDef) {
+  		actor.class = actorDef.class;  	
+  		if (actor.class == "americanHero")
+  		{
+  			actor.isHero = true;
+  		} 
+    }
 
 	return actor;
 };
