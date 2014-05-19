@@ -90,20 +90,28 @@ function GameManager()
 		canvasManager.stage.update();
 	}
 
-	function levelLoaded(levelActors) {
-		//hideLoadingScreen();
+	function levelLoaded(levelData) {
 
-		actors = levelActors;
+		//sets levelActors
+		actors = levelData.actors;
 
-		hero = actors[1];
+		hero = levelData.hero;
 		this.hero = hero;
+
+		this.world = levelData.world;
+
+		//cycle through actors and add them to the canvas
+		hideLoadingScreen();
+
+		for (var i = 0; i < actors.length; i++) {
+			canvasManager.addActor(actors[i]);
+		}
 
 		debug.log("level loaded...");
 
 		//go!
 		state = gameState.RUNNING;
 
-		hideLoadingScreen();
 		debug.log("game loop started.");
 	}
 
@@ -112,25 +120,18 @@ function GameManager()
 	{
 		hero.body.GetBody().ApplyForce(new b2Vec2(dirX*100,dirY*500),hero.body.GetBody().GetWorldCenter());
 	}
+
 	this.init = function(cm)
 	{
 		canvasManager = cm;
 		
-		// Define the world
-		var gravity = new b2Vec2(0, 10);
-		var doSleep = true;
-			
-		//generate the physics world
-		world = new b2World(gravity, doSleep);
-		this.world = world;
-
 		showLoadingScreen("projectred.png");
 
 		//start game loop
 		createjs.Ticker.addEventListener("tick", run);
 
 		//load the level
-		LevelLoader.load("TestLevel.json", levelLoaded, world, canvasManager);
+		LevelLoader.load("TestLevel.json", levelLoaded, canvasManager);
 
  		Keyboard.bind(heroMove);
 
