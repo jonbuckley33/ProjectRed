@@ -61,10 +61,12 @@ function GameManager()
 				}
 
 				//repaint
-				canvasManager.stage.update();
+				canvasManager.update();
 				break;
 
 			case gameState.PAUSED: 
+				//repaint
+				canvasManager.update();
 				break;
 
 			case gameState.GAME_OVER:
@@ -117,9 +119,15 @@ function GameManager()
 
 	var testActor;
 	function levelLoaded(levelData) {
+		//specific ref to actors
 		actors = levelData.actors;
+
+		//specific ref to hero
 		hero = levelData.hero;
+
+		//ref to world generated in levelData
 		world = levelData.world;
+		world.SetContactListener(CollisionHandler);
 
 		//cycle through actors and add them to the canvas
 		hideLoadingScreen();
@@ -138,6 +146,9 @@ function GameManager()
 		debug.log("game loop started.");
 	}
 
+	this.getWorld = function () {
+		return world;
+	};
 
 	this.getTestActor = function() {
 		return testActor;
@@ -186,8 +197,13 @@ function GameManager()
 
 	};
 
+	//toggles game paused, or not
 	this.pause = function()
 	{
-		this.state = gameState.PAUSED;
+		if (state == gameState.PAUSED) {
+			state = gameState.RUNNING;
+		} else if (state == gameState.RUNNING) {
+			state = gameState.PAUSED;
+		}
 	};
 }
