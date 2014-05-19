@@ -31,7 +31,6 @@ function animLoad (URL,frameW,frameH){
     bmpAnimation.vX = 4;
 
     return bmpAnimation;
-
 }
 
 var defaultDensity = 1.0;
@@ -48,6 +47,7 @@ LevelLoader.hydrate = function(actorDef, world, cm) {
 	//we can make these settable properties, but for now, we won't
     fixDef.restitution = defaultRestitution;
 
+<<<<<<< HEAD
     if ("graphics" in actorDef){
 
     	if ("type" in actorDef.graphics){
@@ -118,6 +118,8 @@ LevelLoader.hydrate = function(actorDef, world, cm) {
 
 
 
+=======
+>>>>>>> FETCH_HEAD
     //extract position
     if ("position" in actorDef) {
     	bodyDef.position.x = actorDef.position.x;
@@ -171,7 +173,13 @@ LevelLoader.hydrate = function(actorDef, world, cm) {
 	var body = world.CreateBody(bodyDef).CreateFixture(fixDef);
 	var actor = new Actor(skin, body);
 
-	//cm.addActor(actor);
+    if ("class" in actorDef) {
+  		actor.class = actorDef.class;  	
+  		if (actor.class == "americanHero")
+  		{
+  			actor.isHero = true;
+  		} 
+    }
 
 	return actor;
 };

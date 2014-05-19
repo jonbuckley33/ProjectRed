@@ -23,6 +23,9 @@ function GameManager()
 	//array of actors in game
 	var actors = [];
 
+	//actors to delete on next update
+	var toDestroyActors = [];
+
 	//framerate
 	var timeStep = 1.0/25;
 	var iteration = 5;
@@ -35,10 +38,16 @@ function GameManager()
 		{
 			case gameState.INITIALIZING:
 				//repaint
-				canvasManager.stage.update();
+				canvasManager.update();
 				break;
 
 			case gameState.RUNNING:
+				//kill the old actors
+				for (var i = 0; i < toDestroyActors.length; i++) {
+					world.DestroyBody(toDestroyActors[i].body);
+				}
+				toDestroyActors = [];
+
 				//step world
 				world.Step(event.delta / 1000, iteration, velocitySteps);
 				//world.DrawDebugData();
@@ -63,7 +72,7 @@ function GameManager()
 		};
 	}
 
-	var blackRect, logo, loadingImage;
+	var blackRect, logo, loadingAnim;
 	function showLoadingScreen(decalName) {
 		blackRect = new createjs.Shape();
 		blackRect.graphics.beginFill("white").drawRect(0, 0, canvasManager.getCanvasWidth(), canvasManager.getCanvasHeight());
@@ -71,34 +80,45 @@ function GameManager()
 		canvasManager.stage.addChild(blackRect);
 
 		logo = new createjs.Bitmap("images/" + decalName);
+		debug.log(logo.getBounds())
+		logo.regX = 100;
+		logo.regY = 25;
 		logo.x = canvasManager.getCanvasWidth() / 2;
 		logo.y = canvasManager.getCanvasHeight() / 2;
 		canvasManager.stage.addChild(logo);
 
-		/*loadingImage = new createjs.Bitmap("images/loading.gif");
-		loadingImage.x = logo.x + 10;
-		loadingImage.y = logo.y + 50;
-		canvasManager.stage.addChild(loadingImage);*/
+		var loadImg = new Image();
+		loadImg.src = "public/images/loadbar.png";
 
-		canvasManager.stage.update();
+		var loadSheet = new createjs.SpriteSheet({
+			images: [loadImg],
+			frames: {width: 125, height: 30, regX: 62, regY: 15},
+			animations: {
+				load: [0, 16, "load"]
+			}
+		});
+		loadingAnim = new createjs.Sprite(loadSheet, "load");
+
+		loadingAnim.x = logo.x;
+		loadingAnim.y = logo.y + 50;
+		loadingAnim.gotoAndPlay("load");
+		canvasManager.stage.addChild(loadingAnim);
+
+		canvasManager.update();
 	}
 
 	function hideLoadingScreen() {
 		canvasManager.stage.removeChild(logo);
 		canvasManager.stage.removeChild(blackRect);
+		canvasManager.stage.removeChild(loadingAnim)
 
-		canvasManager.stage.update();
+		canvasManager.update();
 	}
 
+	var testActor;
 	function levelLoaded(levelData) {
-
-		//sets levelActors
-		actors = levelData.actors;
-
 		hero = levelData.hero;
-		this.hero = hero;
-
-		this.world = levelData.world;
+		world = levelData.world;
 
 		//cycle through actors and add them to the canvas
 		hideLoadingScreen();
@@ -107,35 +127,56 @@ function GameManager()
 			canvasManager.addActor(actors[i]);
 		}
 
+		testActor = actors[1];
 		debug.log("level loaded...");
 
 		//go!
 		state = gameState.RUNNING;
 
+		hideLoadingScreen();
 		debug.log("game loop started.");
 	}
 
+
+	this.getTestActor = function() {
+		return testActor;
+	};
 
 	function heroMove(dirX,dirY)
 	{
 		hero.body.GetBody().ApplyForce(new b2Vec2(dirX*100,dirY*500),hero.body.GetBody().GetWorldCenter());
 	}
 
+	this.removeActor = function(actor) {
+		//clear the skin from the stage
+		canvasManager.removeActor(actor);
+
+		//remove from update list, and push onto destroy list
+		var index = actors.indexOf(actor);
+		if (index > -1) {
+    		actors.splice(index, 1);
+		}
+
+		//delete body later
+		toDestroyActors.push(actor);
+	};
+
 	this.init = function(cm)
 	{
 		canvasManager = cm;
-		
+
 		showLoadingScreen("projectred.png");
 
 		//start game loop
 		createjs.Ticker.addEventListener("tick", run);
 
 		//load the level
-		LevelLoader.load("TestLevel.json", levelLoaded, canvasManager);
+		LevelLoader.load("TestLevel_deprecated.json", levelLoaded, canvasManager);
 
  		Keyboard.bind(heroMove);
 
          //setup debug draw
+<<<<<<< HEAD
    //       var debugDraw = new b2DebugDraw();
 			// debugDraw.SetSprite(document.getElementById("mainCanvas").getContext("2d"));
 			// debugDraw.SetDrawScale(30.0);
@@ -143,6 +184,14 @@ function GameManager()
 			// debugDraw.SetLineThickness(1.0);
 			// debugDraw.SetFlags(b2DebugDraw.e_shapeBit | b2DebugDraw.e_jointBit);
 			// world.SetDebugDraw(debugDraw);
+=======
+         var debugDraw = new b2DebugDraw();
+			debugDraw.SetSprite(document.getElementById("mainCanvas").getContext("2d"));
+			debugDraw.SetDrawScale(30.0);
+			debugDraw.SetFillAlpha(0.3);
+			debugDraw.SetLineThickness(1.0);
+			debugDraw.SetFlags(b2DebugDraw.e_shapeBit | b2DebugDraw.e_jointBit);
+>>>>>>> FETCH_HEAD
 	};
 
 	this.pause = function()
