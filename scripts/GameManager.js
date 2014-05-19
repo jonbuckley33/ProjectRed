@@ -101,10 +101,6 @@ function GameManager()
 
 	var testActor;
 	function levelLoaded(levelData) {
-
-		//sets levelActors
-		actors = levelData.actors;
-
 		hero = levelData.hero;
 		world = levelData.world;
 
@@ -116,12 +112,12 @@ function GameManager()
 		}
 
 		testActor = actors[1];
-
 		debug.log("level loaded...");
 
 		//go!
 		state = gameState.RUNNING;
 
+		hideLoadingScreen();
 		debug.log("game loop started.");
 	}
 
@@ -152,7 +148,7 @@ function GameManager()
 	this.init = function(cm)
 	{
 		canvasManager = cm;
-		
+
 		showLoadingScreen("projectred.png");
 
 		//start game loop
