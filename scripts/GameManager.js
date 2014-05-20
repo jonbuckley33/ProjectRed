@@ -31,6 +31,10 @@ function GameManager()
 	var iteration = 5;
 	var velocitySteps = 2;
 
+	var loaded = 0;
+	var loadmask;
+	var loadbg;
+
 	//state machine of game
 	function run(event)
 	{
@@ -38,6 +42,20 @@ function GameManager()
 		{
 			case gameState.INITIALIZING:
 				//repaint
+				loaded++;
+
+				var percent = loaded/80;
+
+				loadmask.graphics.beginFill("#000000").drawRect(0, 0, percent*125, 30);
+
+				loadmask.cache(0, 0, 125, 30);
+
+				loadingAnim.filters = [
+					new createjs.AlphaMaskFilter(loadmask.cacheCanvas)
+				];
+
+				loadingAnim.cache(0, 0, 125, 130);
+
 				canvasManager.update();
 				break;
 
@@ -76,35 +94,45 @@ function GameManager()
 
 	var blackRect, logo, loadingAnim;
 	function showLoadingScreen(decalName) {
+		// fill screen with white rectangle
 		blackRect = new createjs.Shape();
-		blackRect.graphics.beginFill("white").drawRect(0, 0, canvasManager.getCanvasWidth(), canvasManager.getCanvasHeight());
+		blackRect.graphics.beginFill("white").drawRect(0, 0,
+			canvasManager.getCanvasWidth(), canvasManager.getCanvasHeight());
 		blackRect.x = blackRect.y = 0;
 		canvasManager.stage.addChild(blackRect);
 
 		logo = new createjs.Bitmap("images/" + decalName);
-		debug.log(logo.getBounds())
 		logo.regX = 100;
 		logo.regY = 25;
 		logo.x = canvasManager.getCanvasWidth() / 2;
 		logo.y = canvasManager.getCanvasHeight() / 2;
 		canvasManager.stage.addChild(logo);
 
+		loadbg = new createjs.Bitmap("public/images/load_bg.jpg");
+
 		var loadImg = new Image();
 		loadImg.src = "public/images/loadbar.png";
 
 		var loadSheet = new createjs.SpriteSheet({
 			images: [loadImg],
-			frames: {width: 125, height: 30, regX: 62, regY: 15},
+			frames: {width: 125, height: 30, regX: 0, regY: 0},
 			animations: {
 				load: [0, 16, "load"]
 			}
 		});
 		loadingAnim = new createjs.Sprite(loadSheet, "load");
 
-		loadingAnim.x = logo.x;
-		loadingAnim.y = logo.y + 50;
+		loadingAnim.x = logo.x - 62;
+		loadingAnim.y = logo.y + 35;
 		loadingAnim.gotoAndPlay("load");
+
+		loadbg.x = loadingAnim.x;
+		loadbg.y = loadingAnim.y;
+
+		canvasManager.stage.addChild(loadbg);
 		canvasManager.stage.addChild(loadingAnim);
+
+		loadmask = new createjs.Shape();
 
 		canvasManager.update();
 	}
@@ -113,6 +141,8 @@ function GameManager()
 		canvasManager.stage.removeChild(logo);
 		canvasManager.stage.removeChild(blackRect);
 		canvasManager.stage.removeChild(loadingAnim)
+		canvasManager.stage.removeChild(loadmask);
+		canvasManager.stage.removeChild(loadbg);
 
 		canvasManager.update();
 	}
