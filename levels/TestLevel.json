@@ -13,9 +13,14 @@
 									"end" : 9
 								},
 								{
-									"name" : "walk",
+									"name" : "walkl",
 									"begin" : 10 ,
 									"end" : 19
+								},
+								{
+									"name" : "walkr",
+									"begin" : 20 ,
+									"end" : 29
 								}
 							]
 						}

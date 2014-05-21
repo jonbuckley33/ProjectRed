@@ -233,6 +233,13 @@ function GameManager()
 	function heroMove(dirX,dirY)
 	{
 		hero.body.GetBody().ApplyForce(new b2Vec2(dirX*100,dirY*100),hero.body.GetBody().GetWorldCenter());
+		if (dirX < 0){
+			hero.skin.gotoAndPlay("walkl");
+		}else if (dirX > 0){
+			hero.skin.gotoAndPlay("walkr");
+		}else{
+			hero.skin.gotoAndPlay("idle");
+		}
 	}
 
 	function cameraMove(dirX, dirY)
