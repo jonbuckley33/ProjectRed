@@ -276,7 +276,7 @@ var defaultDoSleep = true;
 
 */
 
-LevelLoader.load = function(fileName, callback, cm)
+LevelLoader.load = function(fileName, callback, cm, camera)
 {
 	debug.log("loading level...");
 
@@ -334,7 +334,7 @@ LevelLoader.load = function(fileName, callback, cm)
 						//place hero above start
 						hero.body.GetBody().SetPosition(heroPos);
 
-						hero.update();
+						hero.update(camera);
 					} 
 
 					actors.push(actor);

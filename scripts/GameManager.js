@@ -92,8 +92,10 @@ function GameManager()
 						canvasManager.stage.removeChild(blackRect);
 						canvasManager.stage.removeChild(logo);
 						canvasManager.stage.removeChild(startBtn);
+
+						camera = new Camera(new b2Vec2(500, 300), 1000, 600);
 						//load the level
-						LevelLoader.load("TestLevel.json", levelLoaded, canvasManager);
+						LevelLoader.load("TestLevel.json", levelLoaded, canvasManager, camera);
 					}
 
 					state = gameState.LOADED;
@@ -203,11 +205,6 @@ function GameManager()
 
 		//cycle through actors and add them to the canvas
 		hideLoadingScreen();
-
-		camera = new Camera(new b2Vec2(500, 300), 1000, 600);
-
-		var wp = new b2Vec2(30, 100);
-		sp = camera.worldToScreen(wp);
 
  		Keyboard.bind(heroMove, camera);
 
