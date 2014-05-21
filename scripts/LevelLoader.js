@@ -80,7 +80,7 @@ var defaultRestitution = 0.2;
 		Actor
 
 */
-LevelLoader.hydrate = function(actorDef, world, cm) {
+LevelLoader.hydrate = function(actorDef, world, cm,animations) {
 	var bodyDef = new b2BodyDef;
 	var fixDef = new b2FixtureDef;
 	var skin = new createjs.Shape();
@@ -134,15 +134,15 @@ LevelLoader.hydrate = function(actorDef, world, cm) {
 			}else{
 				if ("animationDef" in actorDef.graphics){
 					var anim = actorDef.graphics.animationDef;
-
-					if ("animations" in anim){
-						var start = 0 ;
-						if ("startingAnim" in anim) start = anim.startingAnim;
-						skin = animLoad(anim.filepath,anim.frameWidth,anim.frameHeight
-										,anim.animations,start);
+					var start = 0;
+					if (anim in animations){
+						animDef = animations[anim]
+						if ("startingAnim" in animDef) start = animDef.startingAnim
+						skin = animLoad(animDef.filepath,animDef.frameWidth,animDef.frameHeight
+										,animDef.animations,start);
 						fixDef.shape = new b2PolygonShape;
-						fixDef.shape.SetAsBox(Converter.canvasToGame(anim.frameWidth/2)
-											,Converter.canvasToGame(anim.frameHeight/2));
+						fixDef.shape.SetAsBox(Converter.canvasToGame(animDef.frameWidth/2)
+											,Converter.canvasToGame(animDef.frameHeight/2));
 					}else{
 						throw "No animations defined"
 					}
@@ -287,6 +287,13 @@ LevelLoader.load = function(fileName, callback, cm, camera)
 
 			var level = JSON.parse(data);
 
+			//get animations
+			var animations;
+			if ("animations" in level){
+				animations = level.animations;
+			}else throw "No animation library"
+
+
 			//get gravity
 			var gravity = ("gravity" in level) ? new b2Vec2(0, level.gravity) : defaultGravity;
 
@@ -309,7 +316,7 @@ LevelLoader.load = function(fileName, callback, cm, camera)
 				for (var i = 0; i < level.staticActors.length; i++)
 				{
 					var actorDef = level.staticActors[i];
-					var actor = LevelLoader.hydrate(actorDef, world, cm);
+					var actor = LevelLoader.hydrate(actorDef, world, cm,animations);
 
 					actors.push(actor);
 				}
@@ -323,7 +330,7 @@ LevelLoader.load = function(fileName, callback, cm, camera)
 				for (var i = 0; i < level.dynamicActors.length; i++)
 				{
 					var actorDef = level.dynamicActors[i];
-					var actor = LevelLoader.hydrate(actorDef, world, cm);
+					var actor = LevelLoader.hydrate(actorDef, world, cm,animations);
 
 					//sets hero ref
 					if (actor.isHero) {
