@@ -60,7 +60,7 @@ function animLoad (URL,frameW,frameH,anims,start){
 }
 
 var defaultDensity = 1.0;
-var defaultFriction = 0.3;
+var defaultFriction = 0.4;
 var defaultColor = "blue";
 var defaultRestitution = 0.1;
 

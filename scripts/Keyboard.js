@@ -114,7 +114,9 @@ Keyboard.bind = function(hm, cam, cm)
 			
 			//stop updating movement 
 			clearInterval(repeatUpdateMovement);
-			//hm(0.0, 0.0);
+			setTimeout(function() {
+				hm(0.0, 0.0);
+			}, 500);
 		}
 	});
 };
