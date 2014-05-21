@@ -38,6 +38,8 @@ function GameManager()
 
 	var startBtn;
 
+	var camera;
+
 	//state machine of game
 	function run(event)
 	{
@@ -200,6 +202,10 @@ function GameManager()
 		//cycle through actors and add them to the canvas
 		hideLoadingScreen();
 
+		camera = new Camera(1000, 600);
+
+ 		Keyboard.bind(heroMove, cameraMove);
+
 		for (var i = 0; i < actors.length; i++) {
 			canvasManager.addActor(actors[i]);
 		}
@@ -225,6 +231,11 @@ function GameManager()
 	function heroMove(dirX,dirY)
 	{
 		hero.body.GetBody().ApplyForce(new b2Vec2(dirX*100,dirY*100),hero.body.GetBody().GetWorldCenter());
+	}
+
+	function cameraMove(dirX, dirY)
+	{
+		camera.move(dirX * 10, dirY * 10);
 	}
 
 	this.removeActor = function(actor) {
@@ -254,9 +265,6 @@ function GameManager()
 
 		//load the level
 		//LevelLoader.load("TestLevel.json", levelLoaded, canvasManager);
-
- 		Keyboard.bind(heroMove);
-
          //setup debug draw
          var debugDraw = new b2DebugDraw();
 			debugDraw.SetSprite(document.getElementById("mainCanvas").getContext("2d"));
