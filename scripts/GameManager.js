@@ -231,9 +231,11 @@ function GameManager()
 	};
 
 	//max (absolute) speed of hero
-	var maxSpeed = 5.0;
+	var maxSpeed = 3.0;
 	//max increment at any given time of velocity
-	var maxIncrement = 5.0;
+	var maxIncrement = 2.0;
+	//scalar multiplied against vector
+	var movementScalar = 1.0;
 
 	/*
 		Function : heroMove
@@ -248,9 +250,7 @@ function GameManager()
 			void
 	*/
 	function heroMove(dirX,dirY)
-	{
-		var scalar = 0.5;
-		
+	{		
 		var changeX, changeY;
 		changeX = changeY = 0.0;
 		
@@ -272,7 +272,8 @@ function GameManager()
 			changeY = diff;
 		}
 
-		hero.body.GetBody().ApplyImpulse(new b2Vec2(changeX*dirX, changeY*dirY),
+		hero.body.GetBody().ApplyImpulse(
+			new b2Vec2(movementScalar*changeX*dirX, movementScalar*changeY*dirY),
 			hero.body.GetBody().GetWorldCenter());	
 		/*var speedBefore = hero.body.GetBody().GetLinearVelocity().Length();
 		var scalar = (speedBefore < 0.5) ? 3 : maxSpeed / speedBefore;

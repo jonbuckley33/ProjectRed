@@ -16,7 +16,7 @@ var L = 76;
 var U = 85;
 var O = 79;
 
-var keyDown = -1;
+var keyDown = [];
 var eventKeys = [W, A, S, D];
 var repeatUpdateMovement;
 
@@ -32,23 +32,25 @@ var repeatUpdateMovement;
 		void
 */
 function updateMovement(hm) {
-	switch(keyDown) {
-		case W:
-			hm(0,-1);
-			break;
-		case A:
-			hm(-1,0);
-			break;
-		case S:
-			hm(0,1);
-			break;
-		case D:
-			hm(1,0);
-			break;
-		default:
-			break;
+	for (var i = 0; i < keyDown.length; i++) {
+		var key = keyDown[i];
+		switch(key) {
+			case W:
+				hm(0,-1);
+				break;
+			case A:
+				hm(-1,0);
+				break;
+			case S:
+				hm(0,1);
+				break;
+			case D:
+				hm(1,0);
+				break;
+			default:
+				break;
+		}	
 	}
-
 }
 
 /*
@@ -72,8 +74,8 @@ Keyboard.bind = function(hm, cam, cm)
 {
 	$(document).keydown(function (e) {
 		//a key was hit that we care about
-		if ($.inArray(e.which, eventKeys) > -1 && keyDown == -1) {
-			keyDown = e.which;
+		if ($.inArray(e.which, eventKeys) > -1 && $.inArray(e.which, keyDown) < 0) {
+			keyDown.push(e.which);
 
 			//update movement every 50 ms
 			repeatUpdateMovement = setInterval(function () {
@@ -110,13 +112,17 @@ Keyboard.bind = function(hm, cam, cm)
 	$(document).keyup(function (e) {
 		//a key was hit that we care about
 		if ($.inArray(e.which, eventKeys) > -1) {
-			keyDown = -1;
+			var index = keyDown.indexOf(e.which);
+			keyDown.splice(index, 1);
 			
 			//stop updating movement 
 			clearInterval(repeatUpdateMovement);
-			setTimeout(function() {
-				hm(0.0, 0.0);
-			}, 500);
+
+			if (keyDown.length == 0) {
+				setTimeout(function() {
+					hm(0.0, 0.0);
+				}, 500);	
+			}
 		}
 	});
 };
