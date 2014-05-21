@@ -60,9 +60,9 @@ function animLoad (URL,frameW,frameH,anims,start){
 }
 
 var defaultDensity = 1.0;
-var defaultFriction = 0.1;
+var defaultFriction = 0.3;
 var defaultColor = "blue";
-var defaultRestitution = 0.2;
+var defaultRestitution = 0.1;
 
 /*
 	Function: hydrate

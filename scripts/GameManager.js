@@ -230,9 +230,63 @@ function GameManager()
 		return testActor;
 	};
 
+	//max (absolute) speed of hero
+	var maxSpeed = 5.0;
+	//max increment at any given time of velocity
+	var maxIncrement = 5.0;
+
+	/*
+		Function : heroMove
+
+		moves the hero 
+
+		Parameters:
+			dirX - the magnitude of movement in x direction
+			dirY - the magnitude of movement in y direction
+
+		Returns:
+			void
+	*/
 	function heroMove(dirX,dirY)
 	{
-		hero.body.GetBody().ApplyForce(new b2Vec2(dirX*100,dirY*100),hero.body.GetBody().GetWorldCenter());
+		var scalar = 0.5;
+		
+		var changeX, changeY;
+		changeX = changeY = 0.0;
+		
+		var velocity = hero.body.GetBody().GetLinearVelocity();
+		
+		//calculates impulse if moving laterally
+		if (dirX != 0) {
+			var diff = maxSpeed - Math.abs(velocity.x);
+			var diff = (diff > maxIncrement) ? maxIncrement : diff;
+
+			changeX = diff;
+		} 
+
+		//calculates impulse if moving vertically
+		if (dirY != 0) {
+			var diff = maxSpeed - Math.abs(velocity.y);
+			var diff = (diff > maxIncrement) ? maxIncrement : diff;
+
+			changeY = diff;
+		}
+
+		hero.body.GetBody().ApplyImpulse(new b2Vec2(changeX*dirX, changeY*dirY),
+			hero.body.GetBody().GetWorldCenter());	
+		/*var speedBefore = hero.body.GetBody().GetLinearVelocity().Length();
+		var scalar = (speedBefore < 0.5) ? 3 : maxSpeed / speedBefore;
+
+		hero.body.GetBody().ApplyImpulse(new b2Vec2(scalar*dirX*2,scalar*dirY*10),
+			hero.body.GetBody().GetWorldCenter());		
+
+		//undo if too fast
+		if (hero.body.GetBody().GetLinearVelocity().Length() >= maxSpeed) {
+			hero.body.GetBody().ApplyImpulse(new b2Vec2(-scalar*dirX*2,-scalar*dirY*10),
+			hero.body.GetBody().GetWorldCenter());			
+		}*/
+
+		//update animation
 		if (dirX < 0){
 			hero.skin.gotoAndPlay("walkl");
 		}else if (dirX > 0){
