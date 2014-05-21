@@ -1,6 +1,30 @@
 {
 	"name" : "TestLevel",
 	"gravity" : 10.0,
+	"start" : {
+			"fixed" : true,
+			"position" : {"x" : 4, "y" : 4},
+			"graphics" : {
+				"type" : "shape",
+				"shapeDef" : {
+					"type" : "rect",
+					"width" : 2,
+					"height" : 0.5				
+				}
+			}
+		},
+	"end" : {
+			"fixed" : true,
+			"position" : {"x" : 20, "y" : 5},
+			"graphics" : {
+				"type" : "shape",
+				"shapeDef" : {
+					"type" : "rect",
+					"width" : 2,
+					"height" : 0.5
+				}
+			}
+		},
 	"staticActors" : [
 		{ 
 			"name" : "ground",
@@ -17,7 +41,7 @@
 					  }
 			}
 		}
-	] ,
+	],
 	"dynamicActors" : [
 		{ 
 			"name" : "ground",
@@ -39,7 +63,7 @@
 			"fixed" : false,
 			"position" : {"x" : 10, "y" : 1},
 			"density" : 1.0,
-			"class" : "americanHero",
+			"classes" : ["americanHero"],
 			"graphics" : {
 				"type" : "animation",
 				"animationDef" : {

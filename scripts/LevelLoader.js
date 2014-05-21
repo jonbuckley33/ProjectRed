@@ -38,7 +38,6 @@ var defaultFriction = 0.1;
 var defaultColor = "blue";
 var defaultRestitution = 0.2;
 
-
 LevelLoader.hydrate = function(actorDef, world, cm) {
 	var bodyDef = new b2BodyDef;
 	var fixDef = new b2FixtureDef;
@@ -47,6 +46,7 @@ LevelLoader.hydrate = function(actorDef, world, cm) {
 	//we can make these settable properties, but for now, we won't
 	fixDef.restitution = defaultRestitution;
 
+	//does graphics processing per actor
 	if ("graphics" in actorDef){
 
 		if ("type" in actorDef.graphics){
@@ -108,7 +108,6 @@ LevelLoader.hydrate = function(actorDef, world, cm) {
 		}
 	}
 
-
     //extract position
     if ("position" in actorDef) {
     	bodyDef.position.x = actorDef.position.x;
@@ -162,9 +161,11 @@ LevelLoader.hydrate = function(actorDef, world, cm) {
 	var body = world.CreateBody(bodyDef).CreateFixture(fixDef);
 	var actor = new Actor(skin, body);
 
-	if ("class" in actorDef) {
-		actor.class = actorDef.class;  	
-		if (actor.class == "americanHero")
+	//get class information
+	if ("classes" in actorDef) {
+		actor.classes = actorDef.classes;  	
+		//specifically, if is hero, set hero bool
+		if ($.inArray("americanHero", actorDef.classes) > -1)
 		{
 			actor.isHero = true;
 		} 
@@ -172,6 +173,39 @@ LevelLoader.hydrate = function(actorDef, world, cm) {
 
 	return actor;
 };
+
+/*
+	Function: loadStartEnd
+
+	identifies the start and ends of a level, hydrating both of them
+
+	Parameters:
+		levelDef - the level definition, defined as a JSON object
+		world - the physics world
+		cm - the CanvasManager instance
+
+	Returns:
+		{start, end} - start is the start actor, end is the end actor
+
+	See Also: 
+
+		<LevelLoader.hydrate>
+*/
+function loadStartEnd(levelDef, world, cm) {
+	if ("start" in levelDef && "end" in levelDef) {
+		//hydrate the actors playing the start and end 
+		var start = LevelLoader.hydrate(levelDef.start, world, cm),
+			end = LevelLoader.hydrate(levelDef.end, world, cm);
+
+		start.classes.push("start");
+		end.classes.push("end");
+
+		//return pair of them
+		return {start : start, end : end};
+	} else {
+		throw "No start/end defined in level definition";
+	}
+}
 
 var defaultGravity = new b2Vec2(0, 10);
 var defaultDoSleep = true;
@@ -184,14 +218,25 @@ LevelLoader.load = function(fileName, callback, cm)
 		url : "levels/" + fileName,
 		success : function(data) { 
 			debug.log("retrieved level data")
-			
-			//generate the physics world
-			var world = new b2World(defaultGravity, defaultDoSleep);
 
 			var level = JSON.parse(data);
 
+			//get gravity
+			var gravity = ("gravity" in level) ? new b2Vec2(0, level.gravity) : defaultGravity;
+
+			//generate the physics world
+			var world = new b2World(gravity, defaultDoSleep);
+
 			var actors = [];
 			var hero;
+
+			//gets beginning and ending of level
+			var startEnd = loadStartEnd(level, world, cm);
+			var start = startEnd.start,
+				end = startEnd.end;
+
+			actors.push(start); 
+			actors.push(end);
 
 			//populate static actors 
 			if ("staticActors" in level) {
@@ -217,6 +262,13 @@ LevelLoader.load = function(fileName, callback, cm)
 					//sets hero ref
 					if (actor.isHero) {
 						hero = actor;
+
+						var startPos = start.body.GetBody().GetPosition();
+						var heroPos = new b2Vec2(startPos.x, startPos.y - 3);
+						//place hero above start
+						hero.body.GetBody().SetPosition(heroPos);
+
+						hero.update();
 					} 
 
 					actors.push(actor);

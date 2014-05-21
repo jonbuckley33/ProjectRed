@@ -5,7 +5,7 @@ function Actor(skin, body)
 	this.body.GetBody().SetUserData(this);
 	this.skin = skin;
 	this.isHero = false;
-	this.class = undefined;
+	this.classes = [];
 
 	this.update = function() { // translate box2d positions to pixels
 		this.skin.rotation = this.body.GetBody().GetAngle() * (180 / Math.PI);

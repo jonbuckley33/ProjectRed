@@ -17,6 +17,9 @@ function GameManager()
 	//reference to b2world (physics world)
 	var world;
 
+	//collision manager
+	var collisionHandler;
+
 	//protagonist
 	var hero;
 
@@ -147,7 +150,6 @@ function GameManager()
 		canvasManager.update();
 	}
 
-	var testActor;
 	function levelLoaded(levelData) {
 		//specific ref to actors
 		actors = levelData.actors;
@@ -157,7 +159,7 @@ function GameManager()
 
 		//ref to world generated in levelData
 		world = levelData.world;
-		world.SetContactListener(CollisionHandler);
+		world.SetContactListener(collisionHandler);
 
 		//cycle through actors and add them to the canvas
 		hideLoadingScreen();
@@ -206,6 +208,8 @@ function GameManager()
 	this.init = function(cm)
 	{
 		canvasManager = cm;
+
+		collisionHandler = new CollisionHandler(this);
 
 		showLoadingScreen("projectred.png");
 
