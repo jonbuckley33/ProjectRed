@@ -120,7 +120,7 @@ function GameManager()
 				for (var i = 0; i < actors.length; i++)
 				{
 					//gets appropriate placement in canvas
-					actors[i].update();
+					actors[i].update(camera);
 				}
 
 				//repaint
@@ -204,9 +204,12 @@ function GameManager()
 		//cycle through actors and add them to the canvas
 		hideLoadingScreen();
 
-		camera = new Camera(1000, 600);
+		camera = new Camera(new b2Vec2(500, 300), 1000, 600);
 
- 		Keyboard.bind(heroMove, cameraMove);
+		var wp = new b2Vec2(30, 100);
+		sp = camera.worldToScreen(wp);
+
+ 		Keyboard.bind(heroMove, camera);
 
 		for (var i = 0; i < actors.length; i++) {
 			canvasManager.addActor(actors[i]);

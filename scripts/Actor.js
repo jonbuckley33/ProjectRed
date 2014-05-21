@@ -7,10 +7,11 @@ function Actor(skin, body)
 	this.isHero = false;
 	this.classes = [];
 
-	this.update = function() { // translate box2d positions to pixels
+	this.update = function(camera) { // translate box2d positions to pixels
 		this.skin.rotation = this.body.GetBody().GetAngle() * (180 / Math.PI);
-		this.skin.x = Converter.gameToCanvas(this.body.GetBody().GetPosition().x);
-		this.skin.y = Converter.gameToCanvas(this.body.GetBody().GetPosition().y);
+		screenPos = camera.worldToScreen(this.body.GetBody().GetPosition());
+		this.skin.x = screenPos.x;
+		this.skin.y = screenPos.y;
 	};
 
 	//this will help us associate the box2d obj with the actor

@@ -13,7 +13,7 @@ var J = 106;
 var K = 107;
 var L = 108;
 
-Keyboard.bind = function(hm, cm)
+Keyboard.bind = function(hm, cam)
 {
 	$(document).on("keypress", function (e) {
 
@@ -31,16 +31,16 @@ Keyboard.bind = function(hm, cm)
 				hm(1,0);
 			break;
 			case I:
-				cm(0, -1);
+				cam.move(0, -10);
 				break;
 			case J:
-				cm(-1, 0);
+				cam.move(-10, 0);
 				break;
 			case K:
-				cm(0, 1);
+				cam.move(0, 10);
 				break;
 			case L:
-				cm(1, 0);
+				cam.move(10, 0);
 				break;
 			default:
 			break;
