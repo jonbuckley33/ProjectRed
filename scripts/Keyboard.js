@@ -8,13 +8,13 @@ var A = 65;
 var S = 83;
 var D = 68;
 
-var I = 105;
-var J = 106;
-var K = 107;
-var L = 108;
+var I = 73;
+var J = 74;
+var K = 75;
+var L = 76;
 
-var U = 117;
-var O = 111;
+var U = 85;
+var O = 79;
 
 var keyDown = -1;
 var eventKeys = [W, A, S, D];
