@@ -124,7 +124,7 @@ function GameManager()
 					//gets appropriate placement in canvas
 					actors[i].update(camera);
 				}
-
+				
 				//repaint
 				canvasManager.update();
 				break;

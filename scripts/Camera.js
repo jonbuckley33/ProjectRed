@@ -54,6 +54,15 @@ function Camera(position, width, height)
         this.bottom += dy / oneMeter;
     }
 
+    this.moveTo = function(position) {
+        this.position = position;
+
+        this.left = position.x - this.width/2;
+        this.top = position.y - this.height/2;
+        this.right = position.x + this.width/2;
+        this.bottom = position.y + this.height/2;
+    }
+
     this.zoom = function(factor) {
         oneMeter *= 1/factor;
     }
