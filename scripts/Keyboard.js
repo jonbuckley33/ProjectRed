@@ -73,7 +73,9 @@ Keyboard.bind = function(hm, cm)
 			keyDown = e.which;
 
 			//update movement every 50 ms
-			repeatUpdateMovement = setInterval(function () {updateMovement(hm)}, 50);
+			repeatUpdateMovement = setInterval(function () {
+				updateMovement(hm)
+			}, 50);
 		}
 		
 	});
@@ -85,6 +87,7 @@ Keyboard.bind = function(hm, cm)
 			
 			//stop updating movement 
 			clearInterval(repeatUpdateMovement);
+			hm(0.0, 0.0);
 		}
 	});
 };

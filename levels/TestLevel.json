@@ -1,5 +1,30 @@
 {
 	"name" : "TestLevel",
+	"animations" : {
+					"hero" : {
+							"frameWidth" : 64,
+							"frameHeight" : 64,
+							"filepath" : "../images/Monster.png",
+							"startingAnim" : 0,
+							"animations" : [
+								{
+									"name" : "idle",
+									"begin" : 0 ,
+									"end" : 9
+								},
+								{
+									"name" : "walkl",
+									"begin" : 10 ,
+									"end" : 19
+								},
+								{
+									"name" : "walkr",
+									"begin" : 20 ,
+									"end" : 29
+								}
+							]
+						}
+				},
 	"gravity" : 10.0,
 	"start" : {
 			"fixed" : true,
@@ -65,19 +90,7 @@
 			"classes" : ["americanHero"],
 			"graphics" : {
 				"type" : "animation",
-				"animationDef" : {
-					"frameWidth" : 64,
-					"frameHeight" : 64,
-					"filepath" : "../images/exSpriteRun.png",
-					"startingAnim" : 0,
-					"animations" : [
-						{
-							"name" : "walk",
-							"begin" : 0 ,
-							"end" : 9
-						}
-					]
-				}
+				"animationDef" : "hero"
 			}
 		}
 	]

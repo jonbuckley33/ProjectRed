@@ -92,8 +92,10 @@ function GameManager()
 						canvasManager.stage.removeChild(blackRect);
 						canvasManager.stage.removeChild(logo);
 						canvasManager.stage.removeChild(startBtn);
+
+						camera = new Camera(new b2Vec2(500, 300), 1000, 600);
 						//load the level
-						LevelLoader.load("TestLevel.json", levelLoaded, canvasManager);
+						LevelLoader.load("TestLevel.json", levelLoaded, canvasManager, camera);
 					}
 
 					state = gameState.LOADED;
@@ -120,7 +122,7 @@ function GameManager()
 				for (var i = 0; i < actors.length; i++)
 				{
 					//gets appropriate placement in canvas
-					actors[i].update();
+					actors[i].update(camera);
 				}
 
 				//repaint
@@ -204,9 +206,7 @@ function GameManager()
 		//cycle through actors and add them to the canvas
 		hideLoadingScreen();
 
-		camera = new Camera(1000, 600);
-
- 		Keyboard.bind(heroMove, cameraMove);
+ 		Keyboard.bind(heroMove, camera);
 
 		for (var i = 0; i < actors.length; i++) {
 			canvasManager.addActor(actors[i]);
@@ -230,8 +230,23 @@ function GameManager()
 		return testActor;
 	};
 
+	//max (absolute) speed of hero
 	var maxSpeed = 5.0;
+	//max increment at any given time of velocity
 	var maxIncrement = 5.0;
+
+	/*
+		Function : heroMove
+
+		moves the hero 
+
+		Parameters:
+			dirX - the magnitude of movement in x direction
+			dirY - the magnitude of movement in y direction
+
+		Returns:
+			void
+	*/
 	function heroMove(dirX,dirY)
 	{
 		var scalar = 0.5;
@@ -241,6 +256,7 @@ function GameManager()
 		
 		var velocity = hero.body.GetBody().GetLinearVelocity();
 		
+		//calculates impulse if moving laterally
 		if (dirX != 0) {
 			var diff = maxSpeed - Math.abs(velocity.x);
 			var diff = (diff > maxIncrement) ? maxIncrement : diff;
@@ -248,6 +264,7 @@ function GameManager()
 			changeX = diff;
 		} 
 
+		//calculates impulse if moving vertically
 		if (dirY != 0) {
 			var diff = maxSpeed - Math.abs(velocity.y);
 			var diff = (diff > maxIncrement) ? maxIncrement : diff;
@@ -269,6 +286,14 @@ function GameManager()
 			hero.body.GetBody().GetWorldCenter());			
 		}*/
 
+		//update animation
+		if (dirX < 0){
+			hero.skin.gotoAndPlay("walkl");
+		}else if (dirX > 0){
+			hero.skin.gotoAndPlay("walkr");
+		}else{
+			hero.skin.gotoAndPlay("idle");
+		}
 	}
 
 	function cameraMove(dirX, dirY)

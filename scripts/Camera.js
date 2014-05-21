@@ -1,46 +1,53 @@
-function Camera(pos, width, height)
+var oneMeter = 50; // pixels
+
+function Camera(position, width, height)
 {
     // Camera class
     // Contains functions for converting screen coordinates
     // to world coordinates and vice-versa
 
-    var pos = pos;
+    this.position = position;
 
-    var left = 0;
-    var top = 0;
-    var right = width;
-    var bottom = height;
+    this.left = position.x - width/2;
+    this.top = position.y - height/2;
+    this.right = position.x + width/2;
+    this.bottom = position.y + height/2;
 
-    var width = width;
-    var height = height;
+    this.width = width;
+    this.height = height;
 
-    function worldToScreen(x, y) {
+    // Converts a world b2vec2 position into x and y screen coordinates
+    this.worldToScreen = function(point) {
+        var screenX = point.x - this.position.x + this.width/2;
+        var screenY = point.y - this.position.y + this.height/2
         return {
-            x: x - this.x,
-            y: y - this.y
+            x: screenX * oneMeter,
+            y: screenY * oneMeter
         };
     }
 
+    // Converts a screen position into a world b2vec2 position
     function screenToWorld(x, y) {
-        return {
-            x: x + this.x,
-            y: y + this.y
-        };
+        var worldX = x / oneMeter + this.x - this.width/2;
+        var worldY = y / oneMeter + this.y - this.height/2;
+        return new b2vec2(worldX, worldY);
     }
 
-    function onScreen(x, y) {
-        return (this.left <= x &&
-                x <= this.right &&
-                this.top <= y &&
-                y <= this.bottom);
+    // Determines if a world b2vec2 position is in the viewport of the camera
+    function onScreen(worldPos) {
+        return (this.left <= worldPos.x &&
+                worldPos.x <= this.right &&
+                this.top <= worldPos.y &&
+                worldPos.y <= this.bottom);
     }
 
-    function move(dx, dy) {
-        this.x += dx;
-        this.left += dx;
-        this.right += dx;
-        this.y += dy;
-        this.top += dy;
-        this.bottom += dy;
+    // Moves the camera dx pixels right, dy pixels down
+    this.move = function(dx, dy) {
+        this.position.x += dx / oneMeter;
+        this.left += dx / oneMeter;
+        this.right += dx / oneMeter;
+        this.position.y += dy / oneMeter;
+        this.top += dy / oneMeter;
+        this.bottom += dy / oneMeter;
     }
 }
