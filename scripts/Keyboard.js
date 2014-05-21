@@ -13,6 +13,9 @@ var J = 106;
 var K = 107;
 var L = 108;
 
+var U = 117;
+var O = 111;
+
 var keyDown = -1;
 var eventKeys = [W, A, S, D];
 var repeatUpdateMovement;
@@ -27,7 +30,6 @@ var repeatUpdateMovement;
 
 	Returns: 
 		void
-
 */
 function updateMovement(hm) {
 	switch(keyDown) {
@@ -56,6 +58,7 @@ function updateMovement(hm) {
 
 	Parameters:
 		hm - hero movement function
+		cam - a camera instance
 		cm - canadian movement function
 
 	Returns:
@@ -65,7 +68,7 @@ function updateMovement(hm) {
 		<updateMovement>
 
 */
-Keyboard.bind = function(hm, cm)
+Keyboard.bind = function(hm, cam, cm)
 {
 	$(document).keypress(function (e) {
 		//a key was hit that we care about
@@ -76,8 +79,32 @@ Keyboard.bind = function(hm, cm)
 			repeatUpdateMovement = setInterval(function () {
 				updateMovement(hm)
 			}, 50);
+		} else if ($.inArray(e.which, eventKeys) < 0) {
+			switch (e.which) {
+				case I:
+					cam.move(0, -10);
+					break;
+				case J:
+					cam.move(-10, 0);
+					break;
+				case K:
+					cam.move(0, 10);
+					break;
+				case L:
+					cam.move(10, 0);
+					break;
+				case U:
+					cam.zoom(1001/1000);
+					break;
+				case O:
+					cam.zoom(1000/1001);
+					break;
+				default:
+					debug.log("The " + e.which + " key was enterred. this key doesn't" +
+						"correspond to any action");
+					break;
+			}
 		}
-		
 	});
 
 	$(document).keyup(function (e) {
