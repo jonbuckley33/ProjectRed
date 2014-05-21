@@ -18,7 +18,7 @@ var O = 79;
 
 var keyDown = [];
 var eventKeys = [W, A, S, D];
-var repeatUpdateMovement;
+var repeatUpdateMovement = [];
 
 /* 
 	Function : updateMovement
@@ -59,9 +59,8 @@ function updateMovement(hm) {
 	Binds keypresses to event handlers
 
 	Parameters:
-		hm - hero movement function
-		cam - a camera instance
-		cm - canadian movement function
+		controls - dict containing contorl functions
+		cam - camera instance
 
 	Returns:
 		void
@@ -70,17 +69,27 @@ function updateMovement(hm) {
 		<updateMovement>
 
 */
-Keyboard.bind = function(hm, cam, cm)
+Keyboard.bind = function(controls, cam)
 {
+	var hm = controls.heroMove;
+	var stop = controls.heroStop;
+
 	$(document).keydown(function (e) {
 		//a key was hit that we care about
 		if ($.inArray(e.which, eventKeys) > -1 && $.inArray(e.which, keyDown) < 0) {
 			keyDown.push(e.which);
 
 			//update movement every 50 ms
-			repeatUpdateMovement = setInterval(function () {
+			var repeatMovement = setInterval(function () {
 				updateMovement(hm);
 			}, 50);
+			
+			//keep track of these calls
+			repeatUpdateMovement.push({
+				key : e.which,
+				interval : repeatMovement
+			});
+
 		} else if ($.inArray(e.which, eventKeys) < 0) {
 			switch (e.which) {
 				case I:
@@ -115,13 +124,29 @@ Keyboard.bind = function(hm, cam, cm)
 			var index = keyDown.indexOf(e.which);
 			keyDown.splice(index, 1);
 			
-			//stop updating movement 
-			clearInterval(repeatUpdateMovement);
+			//find the function call we want to stop repeating
+			index = -1;
+			for (var i = 0; i < repeatUpdateMovement.length; i ++) {
+				var obj = repeatUpdateMovement[i];
 
+				if (obj.key == e.which) {
+					index = i;
+					break;
+				}
+			}
+
+			//stop updating movement 
+			clearInterval(repeatUpdateMovement[i]);
+
+			//stop tracking this call
+			repeatUpdateMovement.splice(i, 1);
+
+			//if no keys are hit
 			if (keyDown.length == 0) {
 				setTimeout(function() {
+					stop();
 					hm(0.0, 0.0);
-				}, 500);	
+				}, 100);	
 			}
 		}
 	});

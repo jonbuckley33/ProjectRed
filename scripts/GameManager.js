@@ -206,7 +206,10 @@ function GameManager()
 		//cycle through actors and add them to the canvas
 		hideLoadingScreen();
 
- 		Keyboard.bind(heroMove, camera);
+ 		Keyboard.bind({
+ 			heroMove : heroMove,
+ 			heroStop : heroStop
+ 		}, camera);
 
 		for (var i = 0; i < actors.length; i++) {
 			canvasManager.addActor(actors[i]);
@@ -258,34 +261,36 @@ function GameManager()
 		
 		//calculates impulse if moving laterally
 		if (dirX != 0) {
-			var diff = maxSpeed - Math.abs(velocity.x);
-			var diff = (diff > maxIncrement) ? maxIncrement : diff;
+			var diff;
+			if (dirX > 0) {
+				diff = maxSpeed - velocity.x;
+				diff = (Math.abs(diff) > maxIncrement) ? maxIncrement : diff;
+			} else {
+				diff = -maxSpeed - velocity.x;
+				diff = (Math.abs(diff) > maxIncrement) ? -maxIncrement : diff;
+			}
 
 			changeX = diff;
 		} 
 
 		//calculates impulse if moving vertically
 		if (dirY != 0) {
-			var diff = maxSpeed - Math.abs(velocity.y);
-			var diff = (diff > maxIncrement) ? maxIncrement : diff;
+			var diff;
+			if (dirY < 0) {
+				diff = -maxSpeed - velocity.y;
+				diff = (Math.abs(diff) > maxIncrement) ? -maxIncrement : diff;
+			} else {
+				diff = maxSpeed - velocity.y;
+				diff = (Math.abs(diff) > maxIncrement) ? maxIncrement : diff;
+			}
 
 			changeY = diff;
 		}
 
+		//apply impulse
 		hero.body.GetBody().ApplyImpulse(
-			new b2Vec2(movementScalar*changeX*dirX, movementScalar*changeY*dirY),
+			new b2Vec2(movementScalar*changeX, movementScalar*changeY),
 			hero.body.GetBody().GetWorldCenter());	
-		/*var speedBefore = hero.body.GetBody().GetLinearVelocity().Length();
-		var scalar = (speedBefore < 0.5) ? 3 : maxSpeed / speedBefore;
-
-		hero.body.GetBody().ApplyImpulse(new b2Vec2(scalar*dirX*2,scalar*dirY*10),
-			hero.body.GetBody().GetWorldCenter());		
-
-		//undo if too fast
-		if (hero.body.GetBody().GetLinearVelocity().Length() >= maxSpeed) {
-			hero.body.GetBody().ApplyImpulse(new b2Vec2(-scalar*dirX*2,-scalar*dirY*10),
-			hero.body.GetBody().GetWorldCenter());			
-		}*/
 
 		//update animation
 		if (dirX < 0){
@@ -295,6 +300,31 @@ function GameManager()
 		}else{
 			hero.setAnimation("idle");
 		}
+	}
+
+	/*
+		Function : heroStop 
+
+		stops the hero's movement
+
+		Returns: 
+			void
+
+	*/
+	function heroStop() {
+		//get velocity of hero
+		var velocity = hero.body.GetBody().GetLinearVelocity();
+
+		//we aim to cancel it completely
+		var inverse = new b2Vec2(-velocity.x, -velocity.y);
+
+		//apply impulse
+		hero.body.GetBody().ApplyImpulse(
+			inverse,
+			hero.body.GetBody().GetWorldCenter());	
+
+		//chill out our hero
+		hero.setAnimation("idle");
 	}
 
 	function cameraMove(dirX, dirY)
