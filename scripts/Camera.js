@@ -16,14 +16,13 @@ function Camera(position, width, height)
     this.width = width;
     this.height = height;
 
-    this.origWidth = width;
-    this.origHeight = height;
+    this.origMeter = oneMeter;
 
     // Converts a world b2vec2 position into x and y screen coordinates
     this.worldToScreen = function(point) {
-        var scale = this.getScale();
-        var screenX = scale*(point.x - this.position.x + this.width/2);
-        var screenY = scale*(point.y - this.position.y + this.height/2);
+        var screenX = point.x - this.position.x + this.width/2;
+        var screenY = point.y - this.position.y + this.height/2;
+        var scale = this.getScale()
         return {
             x: screenX * oneMeter,
             y: screenY * oneMeter
@@ -32,9 +31,9 @@ function Camera(position, width, height)
 
     // Converts a screen position into a world b2vec2 position
     this.screenToWorld = function(x, y) {
-        var worldX = x / oneMeter + this.x - this.width/2;
-        var worldY = y / oneMeter + this.y - this.height/2;
-        return new b2vec2(worldX, worldY);
+        var worldX = x / oneMeter + this.position.x - this.width/2;
+        var worldY = y / oneMeter + this.position.y - this.height/2;
+        return new b2Vec2(worldX, worldY);
     }
 
     // Determines if a world b2vec2 position is in the viewport of the camera
@@ -56,18 +55,10 @@ function Camera(position, width, height)
     }
 
     this.zoom = function(factor) {
-        this.width *= factor;
-        this.height *= factor;
-
-        this.left = this.position.x - this.width/2;
-        this.top = this.position.y - this.height/2;
-        this.right = this.position.x + this.width/2;
-        this.bottom = this.position.y + this.height/2;
-
-        console.log(this.width, this.height);
+        oneMeter *= 1/factor;
     }
 
     this.getScale = function() {
-        return (this.origWidth / this.width);
+        return (oneMeter / this.origMeter);
     }
 }

@@ -7,7 +7,13 @@ function Actor(skin, body)
 	this.isHero = false;
 	this.classes = [];
 
+
+
 	this.update = function(camera) { // translate box2d positions to pixels
+		var body = this.body;
+		this.skin.on("pressmove", function(evt) {
+    		body.GetBody().SetPosition(camera.screenToWorld(evt.stageX,evt.stageY));
+		});
 		this.skin.rotation = this.body.GetBody().GetAngle() * (180 / Math.PI);
 		screenPos = camera.worldToScreen(this.body.GetBody().GetPosition());
 		this.skin.x = screenPos.x;

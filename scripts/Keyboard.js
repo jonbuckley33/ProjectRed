@@ -1,6 +1,6 @@
 function Keyboard()
 {
-	//responsible for keyinput handling
+	
 }
 
 var W = 87;
@@ -94,10 +94,10 @@ Keyboard.bind = function(hm, cam, cm)
 					cam.move(10, 0);
 					break;
 				case U:
-					cam.zoom(1001/1000);
+					cam.zoom(101/100);
 					break;
 				case O:
-					cam.zoom(1000/1001);
+					cam.zoom(100/101);
 					break;
 				default:
 					debug.log("The " + e.which + " key was enterred. this key doesn't" +
