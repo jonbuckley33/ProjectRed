@@ -32,10 +32,12 @@ function animLoad (URL,frameW,frameH,anims,start){
 
 	//Configure animations in correct format for 
 	//sprite sheet
-	var animations = [];
+	var animations = {};
 	for (i = 0; i < anims.length; i++){
-       animations.push([anims[i].begin, anims[i].end, anims[i].name])
+       animations[anims[i].name] = [anims[i].begin, anims[i].end]
     }
+
+    debug.log(anims.length);
 
 	//Setup Sprite Sheet
 	var spriteSheet = new createjs.SpriteSheet({
@@ -47,10 +49,12 @@ function animLoad (URL,frameW,frameH,anims,start){
 	//creates animation skin object
 	bmpAnimation = new createjs.BitmapAnimation(spriteSheet);
 
-	bmpAnimation.gotoAndPlay(anims[start].name);  
 
     //anim switch speed
-    bmpAnimation.vX = 4;
+    bmpAnimation.vX = 1;
+
+	bmpAnimation.gotoAndPlay(anims[start].name);  
+
 
     return bmpAnimation;
 }

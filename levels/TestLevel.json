@@ -69,13 +69,18 @@
 				"animationDef" : {
 					"frameWidth" : 64,
 					"frameHeight" : 64,
-					"filepath" : "../images/exSpriteRun.png",
+					"filepath" : "../images/Monster.png",
 					"startingAnim" : 0,
 					"animations" : [
 						{
-							"name" : "walk",
+							"name" : "idle",
 							"begin" : 0 ,
 							"end" : 9
+						},
+						{
+							"name" : "walk",
+							"begin" : 10 ,
+							"end" : 19
 						}
 					]
 				}
