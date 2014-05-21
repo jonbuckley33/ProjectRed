@@ -3,10 +3,10 @@ function Keyboard()
 	//responsible for keyinput handling
 }
 
-var W = 119;
-var A = 97;
-var S = 115;
-var D = 100;
+var W = 87;
+var A = 65;
+var S = 83;
+var D = 68;
 
 var I = 105;
 var J = 106;
@@ -35,18 +35,18 @@ function updateMovement(hm) {
 	switch(keyDown) {
 		case W:
 			hm(0,-1);
-		break;
+			break;
 		case A:
 			hm(-1,0);
-		break;
+			break;
 		case S:
 			hm(0,1);
-		break;
+			break;
 		case D:
 			hm(1,0);
-		break;
+			break;
 		default:
-		break;
+			break;
 	}
 
 }
@@ -70,14 +70,14 @@ function updateMovement(hm) {
 */
 Keyboard.bind = function(hm, cam, cm)
 {
-	$(document).keypress(function (e) {
+	$(document).keydown(function (e) {
 		//a key was hit that we care about
 		if ($.inArray(e.which, eventKeys) > -1 && keyDown == -1) {
 			keyDown = e.which;
 
 			//update movement every 50 ms
 			repeatUpdateMovement = setInterval(function () {
-				updateMovement(hm)
+				updateMovement(hm);
 			}, 50);
 		} else if ($.inArray(e.which, eventKeys) < 0) {
 			switch (e.which) {
@@ -109,12 +109,12 @@ Keyboard.bind = function(hm, cam, cm)
 
 	$(document).keyup(function (e) {
 		//a key was hit that we care about
-		if ($.inArray(e.which), eventKeys) {
+		if ($.inArray(e.which, eventKeys) > -1) {
 			keyDown = -1;
 			
 			//stop updating movement 
 			clearInterval(repeatUpdateMovement);
-			hm(0.0, 0.0);
+			//hm(0.0, 0.0);
 		}
 	});
 };

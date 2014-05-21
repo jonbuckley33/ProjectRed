@@ -16,6 +16,12 @@ function Actor(skin, body)
 		this.skin.scaleX = this.skin.scaleY = scale;
 	};
 
+	this.setAnimation = function(str) {
+		if (this.skin.currentAnimation != str) {
+			this.skin.gotoAndPlay(str);
+		}
+	};
+
 	//this will help us associate the box2d obj with the actor
 	this.body.SetUserData(this);
 }

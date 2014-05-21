@@ -288,11 +288,11 @@ function GameManager()
 
 		//update animation
 		if (dirX < 0){
-			hero.skin.gotoAndPlay("walkl");
+			hero.setAnimation("walkl");
 		}else if (dirX > 0){
-			hero.skin.gotoAndPlay("walkr");
+			hero.setAnimation("walkr");
 		}else{
-			hero.skin.gotoAndPlay("idle");
+			hero.setAnimation("idle");
 		}
 	}
 
