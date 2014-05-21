@@ -24,7 +24,9 @@ function Actor(skin, body)
 		this.skin.on("pressmove", function(evt) {
 			//drag and drop the dude
     		body.GetBody().SetPosition(camera.screenToWorld(evt.stageX,evt.stageY));
-
+		});
+		
+		this.skin.on("pressup", function(evt) {
     		//wake him up
     		body.GetBody().SetAwake(true);
 		});

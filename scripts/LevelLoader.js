@@ -49,7 +49,6 @@ function animLoad (URL,frameW,frameH,anims,start){
 	//creates animation skin object
 	bmpAnimation = new createjs.BitmapAnimation(spriteSheet);
 
-
     //anim switch speed
     bmpAnimation.vX = 1;
 
