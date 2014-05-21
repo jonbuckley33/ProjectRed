@@ -30,7 +30,6 @@
 			"name" : "ground",
 			"fixed" : true,
 			"rotation" : "0",
-			"friction" : 0.1,
 			"position" : {"x" : 10, "y" : 8},
 			"graphics" : {
 				"type" : "shape",
@@ -62,7 +61,7 @@
 			"name" : "ball",
 			"fixed" : false,
 			"position" : {"x" : 10, "y" : 1},
-			"density" : 1.0,
+			"density" : 5.0,
 			"classes" : ["americanHero"],
 			"graphics" : {
 				"type" : "animation",
