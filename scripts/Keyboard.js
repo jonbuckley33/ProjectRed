@@ -8,7 +8,12 @@ var A = 97;
 var S = 115;
 var D = 100;
 
-Keyboard.bind = function(hm)
+var I = 105;
+var J = 106;
+var K = 107;
+var L = 108;
+
+Keyboard.bind = function(hm, cm)
 {
 	$(document).on("keypress", function (e) {
 
@@ -25,6 +30,18 @@ Keyboard.bind = function(hm)
 			case D:
 				hm(1,0);
 			break;
+			case I:
+				cm(0, -1);
+				break;
+			case J:
+				cm(-1, 0);
+				break;
+			case K:
+				cm(0, 1);
+				break;
+			case L:
+				cm(1, 0);
+				break;
 			default:
 			break;
 

@@ -69,7 +69,15 @@
 				"animationDef" : {
 					"frameWidth" : 64,
 					"frameHeight" : 64,
-					"filepath" : "../images/exSpriteRun.png"
+					"filepath" : "../images/exSpriteRun.png",
+					"startingAnim" : 0,
+					"animations" : [
+						{
+							"name" : "walk",
+							"begin" : 0 ,
+							"end" : 9
+						}
+					]
 				}
 			}
 		}

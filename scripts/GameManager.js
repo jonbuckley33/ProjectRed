@@ -2,10 +2,11 @@ function GameManager()
 {
 	//enum representing all of the game states
 	var gameState = {
-		INITIALIZING : {value : 0, name : "Initializing", code: "I"},
-		RUNNING : {value : 1, name : "Running", code : "R"},
-		PAUSED : {value : 2, name : "Paused", code : "P"},
-		GAME_OVER : {value : 3, name : "Game Over", code : "G"}
+		INITIALIZING : {value : 0, name : "Initializing", code : "I"},
+		LOADED : {value : 1, name : "Loaded", code : "L"},
+		RUNNING : {value : 2, name : "Running", code : "R"},
+		PAUSED : {value : 3, name : "Paused", code : "P"},
+		GAME_OVER : {value : 4, name : "Game Over", code : "G"}
 	};
 
 	//set the state initially to INITIALIZING
@@ -38,6 +39,10 @@ function GameManager()
 	var loadmask;
 	var loadbg;
 
+	var startBtn;
+
+	var camera;
+
 	//state machine of game
 	function run(event)
 	{
@@ -45,7 +50,7 @@ function GameManager()
 		{
 			case gameState.INITIALIZING:
 				//repaint
-				loaded++;
+				loaded += 5;
 
 				var percent = loaded/80;
 
@@ -59,6 +64,43 @@ function GameManager()
 
 				loadingAnim.cache(0, 0, 125, 130);
 
+				canvasManager.update();
+
+				if (percent >= 1) {
+					/*
+					Resources loaded, create start button, click handler
+
+					*/
+					debug.log("Loaded");
+					canvasManager.stage.removeChild(loadmask);
+					canvasManager.stage.removeChild(loadingAnim);
+					canvasManager.stage.removeChild(loadbg);
+
+					startBtn = new createjs.Bitmap("public/images/start_btn.png");
+					startBtn.addEventListener("click", startLevel);
+
+					startBtn.x = logo.x - 40;
+					startBtn.y = logo.y + 35;
+
+					canvasManager.stage.addChild(startBtn);
+
+					function startLevel() {
+						/*
+						Removes all splash screen stuff,
+						then loads the level
+						*/
+						canvasManager.stage.removeChild(blackRect);
+						canvasManager.stage.removeChild(logo);
+						canvasManager.stage.removeChild(startBtn);
+						//load the level
+						LevelLoader.load("TestLevel.json", levelLoaded, canvasManager);
+					}
+
+					state = gameState.LOADED;
+				}
+				break;
+
+			case gameState.LOADED:
 				canvasManager.update();
 				break;
 
@@ -141,8 +183,6 @@ function GameManager()
 	}
 
 	function hideLoadingScreen() {
-		canvasManager.stage.removeChild(logo);
-		canvasManager.stage.removeChild(blackRect);
 		canvasManager.stage.removeChild(loadingAnim)
 		canvasManager.stage.removeChild(loadmask);
 		canvasManager.stage.removeChild(loadbg);
@@ -163,6 +203,10 @@ function GameManager()
 
 		//cycle through actors and add them to the canvas
 		hideLoadingScreen();
+
+		camera = new Camera(1000, 600);
+
+ 		Keyboard.bind(heroMove, cameraMove);
 
 		for (var i = 0; i < actors.length; i++) {
 			canvasManager.addActor(actors[i]);
@@ -191,6 +235,11 @@ function GameManager()
 		hero.body.GetBody().ApplyForce(new b2Vec2(dirX*100,dirY*100),hero.body.GetBody().GetWorldCenter());
 	}
 
+	function cameraMove(dirX, dirY)
+	{
+		camera.move(dirX * 10, dirY * 10);
+	}
+
 	this.removeActor = function(actor) {
 		//clear the skin from the stage
 		canvasManager.removeActor(actor);
@@ -205,6 +254,8 @@ function GameManager()
 		toDestroyActors.push(actor);
 	};
 
+
+
 	this.init = function(cm)
 	{
 		canvasManager = cm;
@@ -217,10 +268,7 @@ function GameManager()
 		createjs.Ticker.addEventListener("tick", run);
 
 		//load the level
-		LevelLoader.load("TestLevel.json", levelLoaded, canvasManager);
-
- 		Keyboard.bind(heroMove);
-
+		//LevelLoader.load("TestLevel.json", levelLoaded, canvasManager);
          //setup debug draw
          var debugDraw = new b2DebugDraw();
 			debugDraw.SetSprite(document.getElementById("mainCanvas").getContext("2d"));
