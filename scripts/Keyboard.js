@@ -13,6 +13,9 @@ var J = 106;
 var K = 107;
 var L = 108;
 
+var U = 117;
+var O = 111;
+
 Keyboard.bind = function(hm, cam)
 {
 	$(document).on("keypress", function (e) {
@@ -42,7 +45,14 @@ Keyboard.bind = function(hm, cam)
 			case L:
 				cam.move(10, 0);
 				break;
+			case U:
+				cam.zoom(1001/1000);
+				break;
+			case O:
+				cam.zoom(1000/1001);
+				break;
 			default:
+				console.log(e.which);
 			break;
 
 		}

@@ -12,6 +12,8 @@ function Actor(skin, body)
 		screenPos = camera.worldToScreen(this.body.GetBody().GetPosition());
 		this.skin.x = screenPos.x;
 		this.skin.y = screenPos.y;
+		var scale = camera.getScale();
+		this.skin.scaleX = this.skin.scaleY = scale;
 	};
 
 	//this will help us associate the box2d obj with the actor
