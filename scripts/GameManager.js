@@ -186,7 +186,7 @@ function GameManager()
 
 	function heroMove(dirX,dirY)
 	{
-		hero.body.GetBody().ApplyForce(new b2Vec2(dirX*100,dirY*500),hero.body.GetBody().GetWorldCenter());
+		hero.body.GetBody().ApplyForce(new b2Vec2(dirX*100,dirY*100),hero.body.GetBody().GetWorldCenter());
 	}
 
 	this.removeActor = function(actor) {
