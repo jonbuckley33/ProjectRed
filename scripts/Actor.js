@@ -7,6 +7,8 @@ function Actor(skin, body)
 	this.isHero = false;
 	this.classes = [];
 
+	var initialUpdate = true;
+
 	/*
 		Function : update
 
@@ -21,15 +23,6 @@ function Actor(skin, body)
 	*/
 	this.update = function(camera) { // translate box2d positions to pixels
 		var body = this.body;
-		this.skin.on("pressmove", function(evt) {
-			//drag and drop the dude
-    		body.GetBody().SetPosition(camera.screenToWorld(evt.stageX,evt.stageY));
-		});
-		
-		this.skin.on("pressup", function(evt) {
-    		//wake him up
-    		body.GetBody().SetAwake(true);
-		});
 		
 		//update rotation
 		this.skin.rotation = this.body.GetBody().GetAngle() * (180 / Math.PI);
@@ -42,6 +35,12 @@ function Actor(skin, body)
 		//update scale
 		var scale = camera.getScale();
 		this.skin.scaleX = this.skin.scaleY = scale;
+
+		if (initialUpdate) {
+			this.setupMouseEvents(camera);
+
+			initialUpdate = false;
+		}
 	};
 
 	/*
@@ -65,4 +64,25 @@ function Actor(skin, body)
 
 	//this will help us associate the box2d obj with the actor
 	this.body.SetUserData(this);
+
+	this.setupMouseEvents = function(camera) {
+		//sets up mouse events
+		this.skin.on("mousedown", function(evt) {
+			//sleep, child
+			body.GetBody().SetAwake(false);
+		});
+
+		this.skin.on("pressmove", function(evt) {
+			//drag and drop the dude
+	    	body.GetBody().SetPosition(camera.screenToWorld(evt.stageX,evt.stageY));
+	    	body.GetBody().SetAwake(false);
+		});
+			
+		this.skin.on("pressup", function(evt) {
+	   		//wake him up
+	    	body.GetBody().SetAwake(true);
+	    	body.GetBody().SetSleepingAllowed(true);
+		});
+	}
+	
 }
