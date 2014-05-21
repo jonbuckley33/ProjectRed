@@ -37,8 +37,6 @@ function animLoad (URL,frameW,frameH,anims,start){
        animations[anims[i].name] = [anims[i].begin, anims[i].end]
     }
 
-    debug.log(anims.length);
-
 	//Setup Sprite Sheet
 	var spriteSheet = new createjs.SpriteSheet({
 		images: [image], 
