@@ -4,28 +4,50 @@ function LevelLoader() {
 
 var heroImageURL = "../images/exSpriteRun.png"
 
+/*
+	Function: animLoad
 
-function animLoad (URL,frameW,frameH){
+	sets up bitmap animation skin based on 
+	JSON preferences
+
+	Parameters: 
+
+		URL - filepath
+		frameW - frame width
+		frameH - frame height
+		anims - animations array 
+		start - starting/default animation
+
+	Returns:
+
+		BitmapAnimation
+
+*/
+
+function animLoad (URL,frameW,frameH,anims,start){
 
 	//Initialize Image
 	var image = new Image();
 	image.src = URL;
 
+	//Configure animations in correct format for 
+	//sprite sheet
+	var animations = [];
+	for (i = 0; i < anims.length; i++){
+       animations.push([anims[i].begin, anims[i].end, anims[i].name])
+    }
+
 	//Setup Sprite Sheet
 	var spriteSheet = new createjs.SpriteSheet({
 		images: [image], 
 		frames: {width: frameW, height: frameH, regX: frameW/2, regY: frameH/2}, 
-		animations: {  
-            	//we can define multiple animations here   
-            	anim1: [0, 9, "walk"]
-            }
+		animations: animations
         });
 
 	//creates animation skin object
 	bmpAnimation = new createjs.BitmapAnimation(spriteSheet);
 
-    //this will run the specified animation 
-    bmpAnimation.gotoAndPlay("walk"); 
+	bmpAnimation.gotoAndPlay(anims[start].name);  
 
     //anim switch speed
     bmpAnimation.vX = 4;
@@ -39,6 +61,23 @@ var defaultColor = "blue";
 var defaultRestitution = 0.2;
 
 
+
+/*
+	Function: hydrate
+
+	sets up actor based on JSON actor definition
+
+	Parameters: 
+
+		actorDef - actor definition
+		world - Box2D world
+		cm - Canvas Manager
+
+	Returns:
+
+		Actor
+
+*/
 LevelLoader.hydrate = function(actorDef, world, cm) {
 	var bodyDef = new b2BodyDef;
 	var fixDef = new b2FixtureDef;
@@ -92,12 +131,19 @@ LevelLoader.hydrate = function(actorDef, world, cm) {
 			}else{
 				if ("animationDef" in actorDef.graphics){
 					var anim = actorDef.graphics.animationDef;
-					skin = animLoad(anim.filepath,anim.frameWidth,anim.frameHeight);
-					//var widthPix = 50;
-					//var heightPix = 50;
-					//skin.graphics.beginFill(defaultColor).drawRect(-widthPix/2, -heightPix/2, widthPix, heightPix);
-					fixDef.shape = new b2PolygonShape;
-					fixDef.shape.SetAsBox(0.5,0.5);
+
+					if ("animations" in anim){
+						var start = 0 ;
+						if ("startingAnim" in anim) start = anim.startingAnim;
+						skin = animLoad(anim.filepath,anim.frameWidth,anim.frameHeight
+										,anim.animations,start);
+						fixDef.shape = new b2PolygonShape;
+						fixDef.shape.SetAsBox(Converter.canvasToGame(anim.frameWidth/2)
+											,Converter.canvasToGame(anim.frameHeight/2));
+					}else{
+						throw "No animations defined"
+					}
+
 				}else{
 					throw "NO AnimationDef"
 				}
@@ -175,6 +221,23 @@ LevelLoader.hydrate = function(actorDef, world, cm) {
 
 var defaultGravity = new b2Vec2(0, 10);
 var defaultDoSleep = true;
+
+/*
+	Function: load
+
+	sets up level based on JSON then runs callback function
+
+	Parameters: 
+
+		fileName - file name
+		callback - callback function
+		cm - Canvas Manager
+
+	Returns:
+
+		void
+
+*/
 
 LevelLoader.load = function(fileName, callback, cm)
 {
