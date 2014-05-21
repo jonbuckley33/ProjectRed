@@ -214,6 +214,7 @@ LevelLoader.hydrate = function(actorDef, world, cm,animations) {
 		if ($.inArray("americanHero", actorDef.classes) > -1)
 		{
 			actor.isHero = true;
+			actor.body.GetBody().SetFixedRotation(true);
 		} 
 	}
 
