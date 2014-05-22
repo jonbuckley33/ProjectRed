@@ -1,7 +1,7 @@
 var oneMeter = 50; // pixels
 
-function Camera(position, size, bounds)
-{
+function Camera(position, size, bounds) {
+
     // Camera class
     // Contains functions for converting screen coordinates
     // to world coordinates and vice-versa
@@ -22,6 +22,8 @@ function Camera(position, size, bounds)
     this.bounds = bounds;
 
     this.origMeter = oneMeter;
+
+    this.elasticity = 0.2;
 
     // Converts a world b2vec2 position into x and y screen coordinates
     this.worldToScreen = function(point) {
@@ -76,6 +78,19 @@ function Camera(position, size, bounds)
             this.position.y = this.bounds.bottom - this.height/2;
         }
 
+    }
+
+    this.follow = function(targetActor, offset) {
+        if (typeof offset === 'undefined') {
+            offset = {x: 0, y: 0};
+        }
+        var wantPosition = targetActor.body.GetBody().GetPosition();
+
+        var dx = wantPosition.x - this.position.x + offset.x;
+        var dy = wantPosition.y - this.position.y + offset.y;
+
+        this.move((dx) * this.elasticity,
+                  (dy) * this.elasticity);
     }
 
     // Moves the camera dx meters right, dy meters down

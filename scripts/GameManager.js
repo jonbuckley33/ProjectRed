@@ -126,11 +126,7 @@ function GameManager()
 				//world.DrawDebugData();
 				world.ClearForces();
 				
-				camPos = camera.position;
-				heroPos = hero.body.GetBody().GetPosition();
-
-				camera.move((heroPos.x - camPos.x) / 5,
-							(heroPos.y + 0.5 - camPos.y) / 5);
+				camera.follow(hero, {x: 0, y: -2});
 
 				//update positions of actors
 				for (var i = 0; i < actors.length; i++)
