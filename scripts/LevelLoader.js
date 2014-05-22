@@ -328,20 +328,6 @@ LevelLoader.load = function(fileName, callback, cm, camera)
 				{
 					var actorDef = level.dynamicActors[i];
 					var actor = LevelLoader.hydrate(actorDef, world, cm,animations);
-
-					//sets hero ref
-					if (actor.isHero) {
-						hero = actor;
-
-						var startPos = start.body.GetBody().GetPosition();
-						var heroPos = new b2Vec2(startPos.x, startPos.y - 3);
-						//place hero above start
-						hero.body.GetBody().SetPosition(heroPos);
-
-						hero.update(camera);
-					} 
-
-					actors.push(actor);
 				}
 			} else {
 				//uh oh
@@ -350,8 +336,9 @@ LevelLoader.load = function(fileName, callback, cm, camera)
 
 			callback({
 				actors : actors,
-				world : world,
-				hero : hero
+				start : start,
+				end : end,
+				world : world
 			})
 		},
 
