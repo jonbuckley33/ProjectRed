@@ -1,0 +1,160 @@
+/*
+	Class : Game
+
+	Instance of a "Game". Includes a hero, opponent, level, etc.
+
+	Parameters:
+		gameData
+			.canvasManager - a reference to a canvasManager
+			.heroMaker - a function that makes the hero
+			.opponent - the opponent of the hero
+			.level- the level
+			.gameCompleted - callback for when game is over
+			.camera - the camera for the game
+*/
+function Game(gameData)
+{
+	//get parameters
+	var canvasManager = gameData.canvasManager;
+	var world = gameData.level.world;
+	var hero = gameData.heroMaker(world);
+	var opponent = gameData.opponent;
+	var level = gameData.level;
+	var gameCompleted = gameData.gameCompleted;
+	var camera = gameData.level.camera;
+	
+	//self reference
+	var self = this;
+
+	//enum of game states
+	var GameStates = {
+		INITIALIZING : 0,
+		RUNNING : 1,
+		PAUSED : 2,
+		WON : 3,
+		LOST : 4
+	};
+
+	var state = GameStates.INITIALIZING;
+
+	//collision manager
+	var collisionHandler;
+
+	//hero controller
+	var heroController;
+
+	//array of actors in game
+	var actors = level.actors;
+	//actors.push(opponent);
+
+	//actors to delete on next update
+	var toDestroyActors = [];
+
+	//framerate
+	var timeStep = 1.0/25;
+	var iteration = 5;
+	var velocitySteps = 2;
+
+	//camera instance
+	var camera = new Camera(new b2Vec2(500, 300), 1000, 600);
+
+	function spawnHero() {
+		//puts hero above spawn
+		var startPos = level.start.body.GetBody().GetPosition();
+		var heroPos = new b2Vec2(startPos.x, startPos.y - 3);
+		hero.body.GetBody().SetPosition(heroPos);
+
+		//update hero's skin and push onto array
+		hero.update(camera);
+		actors.push(hero);
+	}
+
+	function run(event) {
+		switch (state) {
+			case GameStates.INITIALIZING:
+				spawnHero();
+
+				//construct collision handler
+				collisionHandler = new CollisionHandler(self);
+				world.SetContactListener(collisionHandler);
+
+				heroController = new HeroControl(hero);
+
+				//binds keys to movement functions
+				Keyboard.bind({
+					heroMove : heroController.heroMove,
+					heroStop : heroController.heroStop
+				}, canvasManager);
+
+				//add actors to stage
+				for (var i = 0; i < actors.length; i++) {
+					canvasManager.addActor(actors[i]);
+				}
+
+				state = GameStates.RUNNING;
+				break;
+
+			case GameStates.RUNNING:
+				//kill the old actors
+				for (var i = 0; i < toDestroyActors.length; i++) {
+					world.DestroyBody(toDestroyActors[i].body);
+				}
+				toDestroyActors = [];
+
+				//step world
+				world.Step(event.delta / 1000, iteration, velocitySteps);
+				//world.DrawDebugData();
+				world.ClearForces();
+				
+				//follow hero
+				camPos = camera.position;
+				heroPos = hero.body.GetBody().GetPosition();
+
+				camWant = new b2Vec2(heroPos.x+490, heroPos.y+293);
+				speed = 5;
+				camDiff = new b2Vec2(
+					(camWant.x - camPos.x)/speed,
+					(camWant.y - camPos.y)/speed)
+				camera.moveTo(new b2Vec2(
+					camPos.x + camDiff.x,
+					camPos.y + camDiff.y));
+
+				//update positions of actors
+				for (var i = 0; i < actors.length; i++)
+				{
+					//gets appropriate placement in canvas
+					actors[i].update(camera);
+				}
+				break;
+
+			case GameStates.PAUSED:
+				break;
+
+			case GameStates.WON:
+				gameCompleted();
+				break;
+
+			case GameStates.LOST:
+				gameCompleted();
+				break;
+		}
+
+		//repaint
+		canvasManager.update();
+	}
+
+	this.start = function() {
+		//start game loop
+		createjs.Ticker.addEventListener("tick", run);
+	};
+
+	function pause() {
+		state = GameStates.PAUSED;
+	}
+
+	this.pause = function() {
+		pause();
+	};
+
+}
+

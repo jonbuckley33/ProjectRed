@@ -145,7 +145,6 @@ Keyboard.bind = function(controls, cam)
 			if (keyDown.length == 0) {
 				setTimeout(function() {
 					stop();
-					hm(0.0, 0.0);
 				}, 100);	
 			}
 		}

@@ -10,8 +10,8 @@
 		an instance of CollisionHandler
 
 */
-function CollisionHandler(gm) {
-	var gameManager = gm;
+function CollisionHandler(game) {
+	var game = game;
 
 	this.PreSolve = function(e) {};
 	this.BeginContact = function(e){
@@ -40,8 +40,9 @@ function CollisionHandler(gm) {
 		if (actorA.isHero || actorB.isHero) {
 			if ($.inArray("end", actorA.classes) > -1 || 
 				$.inArray("end", actorB.classes) > -1) {
+
 				//player wins
-				gameManager.pause();
+				game.pause();
 			}
 		}
 	}

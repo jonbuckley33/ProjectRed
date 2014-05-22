@@ -44,27 +44,24 @@
 	<script src="scripts/Actor.js"></script>
 	<script src="scripts/Keyboard.js"></script>
 	<script src="scripts/Camera.js"></script>
+	<script src="scripts/HeroControl.js"></script>
+	<script src="scripts/StartScreen.js"></script>
+	<script src="scripts/HeroSelect.js"></script>
+	<script src="scripts/LevelSelect.js"></script>
+	<script src="scripts/Game.js"></script>
 	<script src="scripts/GameManager.js"></script>
 </head>
 
 <!-- body -->
 <body onLoad="init();">
 	<script type="text/javascript">
-		var CM;
-		var GM;
-		var world;
 
 		//hacky solution to make jQuery work 
 		var $ = jQuery;
 		function init()
 		{
-			CM = new CanvasManager();
-			CM.init("mainCanvas");
-
 			GM = new GameManager();
-
-			//this will set up the game loop in GameManager
-			GM.init(CM);
+			GM.start();
 		}
 	</script>
 

@@ -23,7 +23,7 @@ function Actor(skin, body)
 	*/
 	this.update = function(camera) { // translate box2d positions to pixels
 		var body = this.body;
-		
+
 		//update rotation
 		this.skin.rotation = this.body.GetBody().GetAngle() * (180 / Math.PI);
 
@@ -56,10 +56,9 @@ function Actor(skin, body)
 
 	*/
 	this.setAnimation = function(str) {
-
-		if (this.skin.currentAnimation != str) {
+		/*if (this.skin.currentAnimation != str) {
 			this.skin.gotoAndPlay(str);
-		}
+		}*/
 	};
 
 	//this will help us associate the box2d obj with the actor
