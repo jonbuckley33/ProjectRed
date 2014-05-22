@@ -1,390 +1,99 @@
 function GameManager()
 {
-	//enum representing all of the game states
-	var gameState = {
-		INITIALIZING : {value : 0, name : "Initializing", code : "I"},
-		LOADED : {value : 1, name : "Loaded", code : "L"},
-		RUNNING : {value : 2, name : "Running", code : "R"},
-		PAUSED : {value : 3, name : "Paused", code : "P"},
-		GAME_OVER : {value : 4, name : "Game Over", code : "G"}
-	};
-
-	//set the state initially to INITIALIZING
-	var state = gameState.INITIALIZING;
-
 	//reference to CanvasManager instance (which contains the EaselJs stage)
 	var canvasManager; 
 
-	//reference to b2world (physics world)
-	var world;
+	//continue data pertaining to built game
+	var gameData = {};
 
-	//collision manager
-	var collisionHandler;
+	function initialize() {
+		canvasManager = new CanvasManager("mainCanvas");
 
-	//protagonist
-	var hero;
+		//store reference later
+		gameData.canvasManager = canvasManager;
 
-	//array of actors in game
-	var actors = [];
-
-	//actors to delete on next update
-	var toDestroyActors = [];
-
-	//framerate
-	var timeStep = 1.0/25;
-	var iteration = 5;
-	var velocitySteps = 2;
-
-	var loaded = 0;
-	var loadmask;
-	var loadbg;
-
-	var startBtn;
-
-	var camera;
-
-	//state machine of game
-	function run(event)
-	{
-		switch (state)
-		{
-			case gameState.INITIALIZING:
-				//repaint
-				loaded += 5;
-
-				var percent = loaded/80;
-
-				loadmask.graphics.beginFill("#000000").drawRect(0, 0, percent*125, 30);
-
-				loadmask.cache(0, 0, 125, 30);
-
-				loadingAnim.filters = [
-					new createjs.AlphaMaskFilter(loadmask.cacheCanvas)
-				];
-
-				loadingAnim.cache(0, 0, 125, 130);
-
-				canvasManager.update();
-
-				if (percent >= 1) {
-					/*
-					Resources loaded, create start button, click handler
-
-					*/
-					debug.log("Loaded");
-					canvasManager.stage.removeChild(loadmask);
-					canvasManager.stage.removeChild(loadingAnim);
-					canvasManager.stage.removeChild(loadbg);
-
-					startBtn = new createjs.Bitmap("public/images/start_btn.png");
-					startBtn.addEventListener("click", startLevel);
-
-					startBtn.x = logo.x - 40;
-					startBtn.y = logo.y + 35;
-
-					canvasManager.stage.addChild(startBtn);
-
-					function startLevel() {
-						/*
-						Removes all splash screen stuff,
-						then loads the level
-						*/
-						canvasManager.stage.removeChild(blackRect);
-						canvasManager.stage.removeChild(logo);
-						canvasManager.stage.removeChild(startBtn);
-
-						camera = new Camera(new b2Vec2(10, 6),
-
-											{width : 20,
-											 height : 12},
-
-											{left : 0,
-											 right : 25,
-											 top : 0,
-											 bottom : 15});
-						//load the level
-						LevelLoader.load("TestLevel.json", levelLoaded, canvasManager, camera);
-					}
-
-					state = gameState.LOADED;
-				}
-				break;
-
-			case gameState.LOADED:
-				canvasManager.update();
-				break;
-
-			case gameState.RUNNING:
-				//kill the old actors
-				for (var i = 0; i < toDestroyActors.length; i++) {
-					world.DestroyBody(toDestroyActors[i].body);
-				}
-				toDestroyActors = [];
-
-				//step world
-				world.Step(event.delta / 1000, iteration, velocitySteps);
-				//world.DrawDebugData();
-				world.ClearForces();
-				
-				camera.follow(hero, {x: 0, y: -2});
-
-				//update positions of actors
-				for (var i = 0; i < actors.length; i++)
-				{
-					//gets appropriate placement in canvas
-					actors[i].update(camera);
-				}
-				//repaint
-				canvasManager.update();
-				break;
-
-			case gameState.PAUSED: 
-				//repaint
-				canvasManager.update();
-				break;
-
-			case gameState.GAME_OVER:
-				break;
-		};
+		//go to startscreen
+		startScreen();
 	}
 
-	var blackRect, logo, loadingAnim;
-	function showLoadingScreen(decalName) {
-		// fill screen with white rectangle
-		blackRect = new createjs.Shape();
-		blackRect.graphics.beginFill("white").drawRect(0, 0,
-			canvasManager.getCanvasWidth(), canvasManager.getCanvasHeight());
-		blackRect.x = blackRect.y = 0;
-		canvasManager.stage.addChild(blackRect);
+	function startScreen() {
+		//construct start screen and show it
+		var startScreen = new StartScreen(canvasManager, {
+			//when user clicks continue, hide start screen, continue
+			continueFunction : function() {
+				startScreen.hide();
 
-		logo = new createjs.Bitmap("images/" + decalName);
-		logo.regX = 100;
-		logo.regY = 25;
-		logo.x = canvasManager.getCanvasWidth() / 2;
-		logo.y = canvasManager.getCanvasHeight() / 2;
-		canvasManager.stage.addChild(logo);
-
-		loadbg = new createjs.Bitmap("public/images/load_bg.jpg");
-
-		var loadImg = new Image();
-		loadImg.src = "public/images/loadbar.png";
-
-		var loadSheet = new createjs.SpriteSheet({
-			images: [loadImg],
-			frames: {width: 125, height: 30, regX: 0, regY: 0},
-			animations: {
-				load: [0, 16, "load"]
+				signIn();
 			}
 		});
-		loadingAnim = new createjs.Sprite(loadSheet, "load");
-
-		loadingAnim.x = logo.x - 62;
-		loadingAnim.y = logo.y + 35;
-		loadingAnim.gotoAndPlay("load");
-
-		loadbg.x = loadingAnim.x;
-		loadbg.y = loadingAnim.y;
-
-		canvasManager.stage.addChild(loadbg);
-		canvasManager.stage.addChild(loadingAnim);
-
-		loadmask = new createjs.Shape();
-
-		canvasManager.update();
+		startScreen.show();
 	}
 
-	function hideLoadingScreen() {
-		canvasManager.stage.removeChild(loadingAnim)
-		canvasManager.stage.removeChild(loadmask);
-		canvasManager.stage.removeChild(loadbg);
-
-		canvasManager.update();
+	function signIn() {
+		modeSelect();
 	}
 
-	function levelLoaded(levelData) {
-		//specific ref to actors
-		actors = levelData.actors;
-
-		//specific ref to hero
-		hero = levelData.hero;
-
-		//ref to world generated in levelData
-		world = levelData.world;
-		world.SetContactListener(collisionHandler);
-
-		//cycle through actors and add them to the canvas
-		hideLoadingScreen();
-
- 		Keyboard.bind({
- 			heroMove : heroMove,
- 			heroStop : heroStop
- 		}, camera);
-
-		for (var i = 0; i < actors.length; i++) {
-			canvasManager.addActor(actors[i]);
-		}
-
-		testActor = actors[1];
-		debug.log("level loaded...");
-
-		//go!
-		state = gameState.RUNNING;
-
-		hideLoadingScreen();
-		debug.log("game loop started.");
+	function modeSelect() {
+		matchmake();
 	}
 
-	this.getWorld = function () {
-		return world;
-	};
+	function matchmake() {
+		heroSelect();
+	}
 
-	this.getTestActor = function() {
-		return testActor;
-	};
+	function heroSelect() {
+		//construct hero select screen
+		var heroSelect = new HeroSelect(canvasManager, {
+			continueFunction : function(heroMaker) {
+				//save hero, hide selection screen
+				gameData.heroMaker = heroMaker;
+				heroSelect.hide();
 
-	//max (absolute) speed of hero
-	var maxSpeed = 3.0;
-	//max increment at any given time of velocity
-	var maxIncrement = 2.0;
-	//scalar multiplied against vector
-	var movementScalar = 1.0;
-
-	/*
-		Function : heroMove
-
-		moves the hero 
-
-		Parameters:
-			dirX - the magnitude of movement in x direction
-			dirY - the magnitude of movement in y direction
-
-		Returns:
-			void
-	*/
-	function heroMove(dirX,dirY)
-	{		
-		var changeX, changeY;
-		changeX = changeY = 0.0;
-		
-		var velocity = hero.body.GetBody().GetLinearVelocity();
-		
-		//calculates impulse if moving laterally
-		if (dirX != 0) {
-			var diff;
-			if (dirX > 0) {
-				diff = maxSpeed - velocity.x;
-				diff = (Math.abs(diff) > maxIncrement) ? maxIncrement : diff;
-			} else {
-				diff = -maxSpeed - velocity.x;
-				diff = (Math.abs(diff) > maxIncrement) ? -maxIncrement : diff;
+				sync();
 			}
+		});
 
-			changeX = diff;
-		} 
+		//show hero select screen
+		heroSelect.show();
+	}
 
-		//calculates impulse if moving vertically
-		if (dirY != 0) {
-			var diff;
-			if (dirY < 0) {
-				diff = -maxSpeed - velocity.y;
-				diff = (Math.abs(diff) > maxIncrement) ? -maxIncrement : diff;
-			} else {
-				diff = maxSpeed - velocity.y;
-				diff = (Math.abs(diff) > maxIncrement) ? maxIncrement : diff;
+	function sync() {
+		levelSelect();
+	}
+
+	function levelSelect() {
+		//construct level select screen
+		var levelSelect = new LevelSelect(canvasManager, {
+				continueFunction : function(level) {
+				//save level, hide selection screen
+				gameData.level = level;
+				levelSelect.hide();
+
+				playGame();
 			}
+		});
 
-			changeY = diff;
-		}
-
-		//apply impulse
-		hero.body.GetBody().ApplyImpulse(
-			new b2Vec2(movementScalar*changeX, movementScalar*changeY),
-			hero.body.GetBody().GetWorldCenter());	
-
-		//update animation
-		if (dirX < 0){
-			hero.setAnimation("walkl");
-		}else if (dirX > 0){
-			hero.setAnimation("walkr");
-		}else{
-			hero.setAnimation("idle");
-		}
+		//show level select
+		levelSelect.show();
 	}
 
-	/*
-		Function : heroStop 
+	function levelEditor() {
 
-		stops the hero's movement
-
-		Returns: 
-			void
-
-	*/
-	function heroStop() {
-		//get velocity of hero
-		var velocity = hero.body.GetBody().GetLinearVelocity();
-
-		//we aim to cancel it completely
-		var inverse = new b2Vec2(-velocity.x, -velocity.y);
-
-		//apply impulse
-		hero.body.GetBody().ApplyImpulse(
-			inverse,
-			hero.body.GetBody().GetWorldCenter());	
-
-		//chill out our hero
-		hero.setAnimation("idle");
 	}
 
-	function cameraMove(dirX, dirY)	
-	{
-		camera.move(dirX * 10, dirY * 10);
+	function playGame() {
+		gameData.gameCompleted = function(postgameReport) {
+			//temporary 
+			startScreen();
+		};
+
+		//construct actual game
+		var game = new Game(gameData);
+		game.start();
 	}
 
-	this.removeActor = function(actor) {
-		//clear the skin from the stage
-		canvasManager.removeActor(actor);
-
-		//remove from update list, and push onto destroy list
-		var index = actors.indexOf(actor);
-		if (index > -1) {
-    		actors.splice(index, 1);
-		}
-
-		//delete body later
-		toDestroyActors.push(actor);
-	};
-
-	this.init = function(cm)
+	this.start = function()
 	{
-		canvasManager = cm;
-
-		collisionHandler = new CollisionHandler(this);
-
-		showLoadingScreen("projectred.png");
-
-		//start game loop
-		createjs.Ticker.addEventListener("tick", run);
-
-		//load the level
-		//LevelLoader.load("TestLevel.json", levelLoaded, canvasManager);
-         //setup debug draw
-         var debugDraw = new b2DebugDraw();
-			debugDraw.SetSprite(document.getElementById("mainCanvas").getContext("2d"));
-			debugDraw.SetDrawScale(30.0);
-			debugDraw.SetFillAlpha(0.3);
-			debugDraw.SetLineThickness(1.0);
-			debugDraw.SetFlags(b2DebugDraw.e_shapeBit | b2DebugDraw.e_jointBit);
-
-	};
-
-	//toggles game paused, or not
-	this.pause = function()
-	{
-		if (state == gameState.PAUSED) {
-			state = gameState.RUNNING;
-		} else if (state == gameState.RUNNING) {
-			state = gameState.PAUSED;
-		}
-	};
+		initialize();
+	}
 }
