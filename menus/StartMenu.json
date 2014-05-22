@@ -1,0 +1,12 @@
+{
+    "name" : "StartMenu",
+    "bg_image" : "startmenu.jpg",
+    "buttons" : {
+                 "start" : {
+                            "x" : 500,
+                            "y" : 300,
+                            "image" : "start_btn.jpg",
+                            "function" : "startGame"
+                    }
+        }
+}
