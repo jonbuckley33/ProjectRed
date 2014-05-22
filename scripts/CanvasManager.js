@@ -1,16 +1,8 @@
-function CanvasManager()
+function CanvasManager(canvasID)
 {
     //reference to stage object
-
-    var canvas;
-    
-    this.init = function(canvasID)
-    {
-        //Create a stage by getting a reference to the canvas
-         this.stage = new createjs.Stage(canvasID);
-         canvas = $("#" + canvasID);
-
-    }
+    this.canvas = $("#" + canvasID);
+    this.stage = new createjs.Stage(canvasID);
 
     //adds actor skin to stage
     this.addActor = function(child) {
@@ -26,7 +18,6 @@ function CanvasManager()
     this.update = function() { this.stage.update(); }
 
     //gets width and height of canvas that stage is drawn on
-    this.getCanvasWidth = function () {return canvas.width();}
-    this.getCanvasHeight = function () {return canvas.height();}
+    this.getCanvasWidth = function () {return this.canvas.width();}
+    this.getCanvasHeight = function () {return this.canvas.height();}
 }
-
