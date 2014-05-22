@@ -93,7 +93,15 @@ function GameManager()
 						canvasManager.stage.removeChild(logo);
 						canvasManager.stage.removeChild(startBtn);
 
-						camera = new Camera(new b2Vec2(500, 300), 1000, 600);
+						camera = new Camera(new b2Vec2(10, 6),
+
+											{width : 20,
+											 height : 12},
+
+											{left : 0,
+											 right : 25,
+											 top : 0,
+											 bottom : 15});
 						//load the level
 						LevelLoader.load("TestLevel.json", levelLoaded, canvasManager, camera);
 					}
@@ -121,14 +129,8 @@ function GameManager()
 				camPos = camera.position;
 				heroPos = hero.body.GetBody().GetPosition();
 
-				camWant = new b2Vec2(heroPos.x+490, heroPos.y+293);
-				speed = 5;
-				camDiff = new b2Vec2(
-					(camWant.x - camPos.x)/speed,
-					(camWant.y - camPos.y)/speed)
-				camera.moveTo(new b2Vec2(
-					camPos.x + camDiff.x,
-					camPos.y + camDiff.y));
+				camera.move((heroPos.x - camPos.x) / 5,
+							(heroPos.y + 0.5 - camPos.y) / 5);
 
 				//update positions of actors
 				for (var i = 0; i < actors.length; i++)

@@ -1,12 +1,15 @@
 var oneMeter = 50; // pixels
 
-function Camera(position, width, height)
+function Camera(position, size, bounds)
 {
     // Camera class
     // Contains functions for converting screen coordinates
     // to world coordinates and vice-versa
 
     this.position = position;
+
+    width = size.width;
+    height = size.height;
 
     this.left = position.x - width/2;
     this.top = position.y - height/2;
@@ -15,6 +18,8 @@ function Camera(position, width, height)
 
     this.width = width;
     this.height = height;
+
+    this.bounds = bounds;
 
     this.origMeter = oneMeter;
 
@@ -44,23 +49,51 @@ function Camera(position, width, height)
                 worldPos.y <= this.bottom);
     }
 
-    // Moves the camera dx pixels right, dy pixels down
-    this.move = function(dx, dy) {
-        this.position.x += dx / oneMeter;
-        this.left += dx / oneMeter;
-        this.right += dx / oneMeter;
-        this.position.y += dy / oneMeter;
-        this.top += dy / oneMeter;
-        this.bottom += dy / oneMeter;
-    }
-
-    this.moveTo = function(position) {
-        this.position = position;
+    // refreshes left, top, right, bottom edges
+    this.refreshEdges = function() {
 
         this.left = position.x - this.width/2;
         this.top = position.y - this.height/2;
         this.right = position.x + this.width/2;
         this.bottom = position.y + this.height/2;
+
+    }
+
+    // contains the camera within its own bounds
+    this.constrain = function() {
+
+        if (this.position.x <= this.bounds.left + this.width/2) {
+            this.position.x = this.bounds.left + this.width/2;
+        }
+        if (this.position.x >= this.bounds.right - this.width/2) {
+            this.position.x = this.bounds.right - this.width/2;
+        }
+
+        if (this.position.y <= this.bounds.top + this.height/2) {
+            this.position.y = this.bounds.top + this.height/2;
+        }
+        if (this.position.y >= this.bounds.bottom - this.height/2) {
+            this.position.y = this.bounds.bottom - this.height/2;
+        }
+
+    }
+
+    // Moves the camera dx meters right, dy meters down
+    this.move = function(dx, dy) {
+        this.position.x += dx;
+        this.position.y += dy;
+
+        this.constrain();
+
+        this.refreshEdges()
+    }
+
+    this.moveTo = function(position) {
+        this.position = position;
+
+        this.constrain();
+
+        this.refreshEdges();
     }
 
     this.zoom = function(factor) {
