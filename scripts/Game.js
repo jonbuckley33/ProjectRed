@@ -56,7 +56,14 @@ function Game(gameData)
 	var velocitySteps = 2;
 
 	//camera instance
-	var camera = new Camera(new b2Vec2(500, 300), 1000, 600);
+	var camera = new Camera(
+		new b2Vec2(10, 6), 
+		{width : 20, height: 12}, {
+		left : 0,
+		right : 25,
+		top : 0,
+		bottom : 15
+	});
 
 	function spawnHero() {
 		//puts hero above spawn
