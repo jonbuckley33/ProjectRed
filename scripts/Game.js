@@ -102,6 +102,9 @@ function Game(gameData)
 				break;
 
 			case GameStates.RUNNING:
+				//follow hero
+				camera.follow(hero);
+
 				//kill the old actors
 				for (var i = 0; i < toDestroyActors.length; i++) {
 					world.DestroyBody(toDestroyActors[i].body);
@@ -112,19 +115,6 @@ function Game(gameData)
 				world.Step(event.delta / 1000, iteration, velocitySteps);
 				//world.DrawDebugData();
 				world.ClearForces();
-				
-				//follow hero
-				camPos = camera.position;
-				heroPos = hero.body.GetBody().GetPosition();
-
-				camWant = new b2Vec2(heroPos.x+490, heroPos.y+293);
-				speed = 5;
-				camDiff = new b2Vec2(
-					(camWant.x - camPos.x)/speed,
-					(camWant.y - camPos.y)/speed)
-				camera.moveTo(new b2Vec2(
-					camPos.x + camDiff.x,
-					camPos.y + camDiff.y));
 
 				//update positions of actors
 				for (var i = 0; i < actors.length; i++)
