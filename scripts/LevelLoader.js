@@ -23,7 +23,6 @@ var heroImageURL = "../images/exSpriteRun.png"
 		BitmapAnimation
 
 */
-
 function animLoad (URL,frameW,frameH,anims,start){
 
 	//Initialize Image
