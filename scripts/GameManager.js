@@ -327,7 +327,7 @@ function GameManager()
 		hero.setAnimation("idle");
 	}
 
-	function cameraMove(dirX, dirY)
+	function cameraMove(dirX, dirY)	
 	{
 		camera.move(dirX * 10, dirY * 10);
 	}
@@ -345,8 +345,6 @@ function GameManager()
 		//delete body later
 		toDestroyActors.push(actor);
 	};
-
-
 
 	this.init = function(cm)
 	{
