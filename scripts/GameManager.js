@@ -18,15 +18,15 @@ function GameManager()
 
 	function startScreen() {
 		//construct start screen and show it
-		var startScreen = new StartScreen(canvasManager, {
-			//when user clicks continue, hide start screen, continue
-			continueFunction : function() {
-				startScreen.hide();
-
-				signIn();
-			}
-		});
-		startScreen.show();
+		var startScreen = new StartScreen(
+			{
+				//when user clicks continue, hide start screen, continue
+				startGame : function() {
+					startScreen.hide(canvasManager);
+					signIn();
+				}
+			});
+		startScreen.init(canvasManager, function() {startScreen.show(canvasManager)});
 	}
 
 	function signIn() {

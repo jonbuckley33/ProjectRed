@@ -4,18 +4,26 @@
 	Responsible for displaying a start screen
 
 	Parameters:
-		canvasManager - an instance of CanvasManager
 		functions - list of callbacks
 */
-function StartScreen(canvasManager, functions) {
+function StartScreen(functions) {
 
-	this.show = function() {
-		//temporary
-		functions.continueFunction();	
-	};
+	function loadedCall(data, startScreen) {
+		console.log("finished loading");
+		console.log('bg:', data.background);
+		console.log('buttons', data.buttonsArray);
+		startScreen.bg = data.background;
+		startScreen.buttons = data.buttonsArray;
+		startScreen.loaded = true;
+	}
 
-	this.hide = function() {
-
-	};
-	
+	this.init = function(canvasManager, callback) {
+		var self = this;
+		Menu.load("StartMenu.json", function(data) {
+										loadedCall(data, self);
+										callback();
+									}, canvasManager, functions);
+	}
 }
+
+StartScreen.prototype = new Menu();

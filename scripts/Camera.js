@@ -29,7 +29,6 @@ function Camera(position, size, bounds) {
     this.worldToScreen = function(point) {
         var screenX = point.x - this.position.x + this.width/2;
         var screenY = point.y - this.position.y + this.height/2;
-        var scale = this.getScale()
         return {
             x: screenX * oneMeter,
             y: screenY * oneMeter
