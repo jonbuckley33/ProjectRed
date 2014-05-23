@@ -16,6 +16,10 @@ function GameManager()
 		startScreen();
 	}
 
+	this.canMan = function() {
+		return canvasManager;
+	}
+
 	function startScreen() {
 		//construct start screen and show it
 		var startScreen = new StartScreen(
@@ -27,6 +31,7 @@ function GameManager()
 				}
 			});
 		startScreen.init(canvasManager, function() {startScreen.show(canvasManager)});
+		canvasManager.update();
 	}
 
 	function signIn() {
