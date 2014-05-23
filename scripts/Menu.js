@@ -9,7 +9,6 @@ function Menu() {
     this.show = function(cm) {
         if (this.loaded) {
             if (!this.shown) {
-                console.log(this.bg);
                 cm.stage.addChild(this.bg);
                 cm.update();
                 for (var i=0, l=this.buttons.length; i < l; i++) {
