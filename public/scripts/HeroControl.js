@@ -8,11 +8,11 @@
 */
 function HeroControl(hero) {
 	//max (absolute) speed of hero
-	var maxSpeed = 3.0;
+	var maxSpeed = {x : 3.0, y : 10.0};
 	//max increment at any given time of velocity
-	var maxIncrement = 2.0;
+	var maxIncrement = { x : 2.0, y : 2.0};
 	//scalar multiplied against vector
-	var movementScalar = 1.0;
+	var movementScalar = .5;
 	
 	/*
 		Function : heroMove
@@ -37,25 +37,27 @@ function HeroControl(hero) {
 		if (dirX != 0) {
 			var diff;
 			if (dirX > 0) {
-				diff = maxSpeed - velocity.x;
-				diff = (Math.abs(diff) > maxIncrement) ? maxIncrement : diff;
+				diff = maxSpeed.x - velocity.x;
+				diff = (Math.abs(diff) > maxIncrement.x) ? maxIncrement.x : diff;
 			} else {
-				diff = -maxSpeed - velocity.x;
-				diff = (Math.abs(diff) > maxIncrement) ? -maxIncrement : diff;
+				diff = -maxSpeed.x - velocity.x;
+				diff = (Math.abs(diff) > maxIncrement.x) ? -maxIncrement.x : diff;
 			}
 
 			changeX = diff;
 		} 
 
 		//calculates impulse if moving vertically
-		if (dirY != 0) {
+		else if (dirY != 0) {
 			var diff;
 			if (dirY < 0) {
-				diff = -maxSpeed - velocity.y;
-				diff = (Math.abs(diff) > maxIncrement) ? -maxIncrement : diff;
+				diff = -maxSpeed.y - velocity.y;
+				diff = (Math.abs(diff) > maxIncrement.y) ? -maxIncrement.y : diff;
+				//diff = -maxIncrement.y;
 			} else {
-				diff = maxSpeed - velocity.y;
-				diff = (Math.abs(diff) > maxIncrement) ? maxIncrement : diff;
+				//diff = maxSpeed - velocity.y;
+				//diff = (Math.abs(diff) > maxIncrement.y) ? maxIncrement.y : diff;
+				diff = maxIncrement.y;
 			}
 
 			changeY = diff;
@@ -90,7 +92,7 @@ function HeroControl(hero) {
 		var velocity = hero.body.GetBody().GetLinearVelocity();
 
 		//we aim to cancel it completely
-		var inverse = new b2Vec2(-velocity.x, -velocity.y);
+		var inverse = new b2Vec2(-velocity.x, 0);
 
 		//apply impulse
 		hero.body.GetBody().ApplyImpulse(

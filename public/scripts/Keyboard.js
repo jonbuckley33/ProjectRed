@@ -31,26 +31,23 @@ var repeatUpdateMovement = [];
 	Returns: 
 		void
 */
-function updateMovement(hm) {
-	for (var i = 0; i < keyDown.length; i++) {
-		var key = keyDown[i];
-		switch(key) {
-			case W:
-				hm(0,-1);
-				break;
-			case A:
-				hm(-1,0);
-				break;
-			case S:
-				hm(0,1);
-				break;
-			case D:
-				hm(1,0);
-				break;
-			default:
-				break;
-		}	
-	}
+function updateMovement(hm, key) {
+	switch(key) {
+		case W:
+			hm(0,-1);
+			break;
+		case A:
+			hm(-1,0);
+			break;
+		case S:
+			hm(0,1);
+			break;
+		case D:
+			hm(1,0);
+			break;
+		default:
+			break;
+	}	
 }
 
 /*
@@ -81,7 +78,7 @@ Keyboard.bind = function(controls, cam)
 
 			//update movement every 50 ms
 			var repeatMovement = setInterval(function () {
-				updateMovement(hm);
+				updateMovement(hm, e.which);
 			}, 50);
 			
 			//keep track of these calls
@@ -136,7 +133,7 @@ Keyboard.bind = function(controls, cam)
 			}
 
 			//stop updating movement 
-			clearInterval(repeatUpdateMovement[i]);
+			clearInterval(repeatUpdateMovement[index].interval);
 
 			//stop tracking this call
 			repeatUpdateMovement.splice(i, 1);
