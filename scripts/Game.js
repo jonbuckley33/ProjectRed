@@ -55,6 +55,8 @@ function Game(gameData)
 	var iteration = 5;
 	var velocitySteps = 2;
 
+	var parallaxBackground;
+
 	//camera instance
 	var camera = new Camera(
 		new b2Vec2(10, 6), 
@@ -79,6 +81,12 @@ function Game(gameData)
 	function run(event) {
 		switch (state) {
 			case GameStates.INITIALIZING:
+				//create and add background
+				parallaxBackground = new ParallaxBackground(level.background, 
+					level.stageLength);
+				canvasManager.stage.addChild(parallaxBackground.img);
+				parallaxBackground.update(camera);
+
 				spawnHero();
 
 				//construct collision handler
@@ -104,6 +112,9 @@ function Game(gameData)
 			case GameStates.RUNNING:
 				//follow hero
 				camera.follow(hero);
+
+				//update bg
+				parallaxBackground.update(camera);
 
 				//kill the old actors
 				for (var i = 0; i < toDestroyActors.length; i++) {

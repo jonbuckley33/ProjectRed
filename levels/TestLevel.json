@@ -1,5 +1,7 @@
 {
 	"name" : "TestLevel",
+	"length" : 20,
+	"background" : "background1.jpg",
 	"animations" : {
 					"hero" : {
 							"frameWidth" : 64,

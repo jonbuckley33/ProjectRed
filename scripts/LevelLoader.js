@@ -290,6 +290,11 @@ LevelLoader.load = function(fileName, callback, cm, camera)
 				animations = level.animations;
 			}else throw "No animation library"
 
+			//get stage length
+			var stageLength = ("stageLength" in level) ? level.stageLength : 20;
+
+			//load background
+			var background = new createjs.Bitmap("art/" + level.background);
 
 			//get gravity
 			var gravity = ("gravity" in level) ? new b2Vec2(0, level.gravity) : defaultGravity;
@@ -328,6 +333,8 @@ LevelLoader.load = function(fileName, callback, cm, camera)
 				{
 					var actorDef = level.dynamicActors[i];
 					var actor = LevelLoader.hydrate(actorDef, world, cm,animations);
+
+					actors.push(actor);
 				}
 			} else {
 				//uh oh
@@ -338,7 +345,9 @@ LevelLoader.load = function(fileName, callback, cm, camera)
 				actors : actors,
 				start : start,
 				end : end,
-				world : world
+				world : world,
+				stageLength : stageLength,
+				background : background
 			})
 		},
 
