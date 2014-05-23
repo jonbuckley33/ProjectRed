@@ -111,7 +111,7 @@ Menu.load = function(filename, callback, cm, functions) {
         success : function(data) {
             debug.log("retrieved menu data");
 
-            var menu = JSON.parse(data);
+            var menu = data;//JSON.parse(data);
 
             //get BG image
             var bg;
