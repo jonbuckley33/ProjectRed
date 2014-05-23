@@ -1,5 +1,12 @@
 {
 	"name" : "TestLevel",
+	"levelBounds": {
+		"left" : 0,
+		"right" : 30,
+		"top" : 0,
+		"bottom" : 15
+	},
+	"background" : "background1.jpg",
 	"animations" : {
 					"hero" : {
 							"frameWidth" : 64,
