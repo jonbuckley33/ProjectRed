@@ -1,21 +1,20 @@
 {
-    // Start Menu definition
-    "bg_image" : "../images/startmenu.jpg",
-    "buttons" : {
-                 "start" : {
-                            "x" : 500,
-                            "y" : 300,
-                            "filepath" : "../images/start_btn.png",
-                            "animDef": {
-                                "width": 80,
-                                "height": 30,
-                                "bounds": {
-                                    "out": {"start": 0, "end": 0},
-                                    "over": {"start": 1, "end": 1},
-                                    "down": {"start": 2, "end": 2}
-                                }
-                            },
-                            "func" : "startGame"
-                    }
+    "buttons" : [
+        {
+            "name" : "start",
+            "x" : 500,
+            "y" : 300,
+            "filepath" : "images/start_btn.png",
+            "animDef": {
+                "width": 80,
+                "height": 30,
+                "bounds": {
+                    "out": {"start": 0, "end": 1},
+                    "over": {"start": 1, "end": 2},
+                    "down": {"start": 2, "end": 3}
+                }
+            },
+            "func" : "startGame"
         }
+    ]
 }
