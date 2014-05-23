@@ -290,8 +290,13 @@ LevelLoader.load = function(fileName, callback, cm, camera)
 				animations = level.animations;
 			}else throw "No animation library"
 
-			//get stage length
-			var stageLength = ("stageLength" in level) ? level.stageLength : 20;
+			//get stage bounds
+			var levelBounds = ("levelBounds" in level) ? level.levelBounds : {
+				"left" : 0, 
+				"right" : 30,
+				"top" : 0,
+				"bottom" : 15
+			};
 
 			//load background
 			var background = new createjs.Bitmap("art/" + level.background);
@@ -346,7 +351,7 @@ LevelLoader.load = function(fileName, callback, cm, camera)
 				start : start,
 				end : end,
 				world : world,
-				stageLength : stageLength,
+				bounds : levelBounds,
 				background : background
 			})
 		},

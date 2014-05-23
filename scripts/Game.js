@@ -60,12 +60,8 @@ function Game(gameData)
 	//camera instance
 	var camera = new Camera(
 		new b2Vec2(10, 6), 
-		{width : 20, height: 12}, {
-		left : 0,
-		right : 25,
-		top : 0,
-		bottom : 15
-	});
+		{width : 20, height: 12}, 
+		level.bounds);
 
 	function spawnHero() {
 		//puts hero above spawn
@@ -82,8 +78,7 @@ function Game(gameData)
 		switch (state) {
 			case GameStates.INITIALIZING:
 				//create and add background
-				parallaxBackground = new ParallaxBackground(level.background, 
-					level.stageLength);
+				parallaxBackground = new ParallaxBackground(level.background, camera);
 				canvasManager.stage.addChild(parallaxBackground.img);
 				parallaxBackground.update(camera);
 

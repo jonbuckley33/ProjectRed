@@ -118,4 +118,8 @@ function Camera(position, size, bounds) {
     this.getScale = function() {
         return (oneMeter / this.origMeter);
     }
+
+    this.oneMeter = function() {
+        return oneMeter;
+    }
 }
