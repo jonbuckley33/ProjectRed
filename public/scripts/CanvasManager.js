@@ -3,6 +3,7 @@ function CanvasManager(canvasID)
     //reference to stage object
     this.canvas = $("#" + canvasID);
     this.stage = new createjs.Stage(canvasID);
+    this.stage.enableMouseOver(10);
 
     //adds actor skin to stage
     this.addActor = function(child) {

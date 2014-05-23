@@ -64,9 +64,6 @@ function createButton(URL, cm, position, frameSize, animBounds, fn) {
 
     // TODO: Replace this animation stuff with animation class
     var buttonImg = new Image();
-    buttonImg.onload = function() {
-        cm.update();
-    };
     buttonImg.src = URL;
 
     var buttonSheet = new createjs.SpriteSheet({

@@ -16,8 +16,8 @@ function GameManager()
 		startScreen();
 	}
 
-	this.canMan = function() {
-		return canvasManager;
+	function canvasUpdate() {
+		canvasManager.update();
 	}
 
 	function startScreen() {
@@ -27,11 +27,12 @@ function GameManager()
 				//when user clicks continue, hide start screen, continue
 				startGame : function() {
 					startScreen.hide(canvasManager);
+					createjs.Ticker.removeEventListener("tick", canvasUpdate);
 					signIn();
 				}
 			});
 		startScreen.init(canvasManager, function() {startScreen.show(canvasManager)});
-		canvasManager.update();
+		createjs.Ticker.addEventListener("tick", canvasUpdate);
 	}
 
 	function signIn() {
