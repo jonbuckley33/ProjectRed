@@ -7,23 +7,19 @@ function Menu() {
     this.buttons;
 
     this.show = function(cm) {
-        debug.log(this);
-        console.log("Loaded = ", this.loaded);
-        debug.log(cm);
         if (this.loaded) {
             if (!this.shown) {
                 cm.stage.addChild(this.bg);
+                cm.update();
                 for (var i=0, l=this.buttons.length; i < l; i++) {
-                    debug.log(this.buttons[i]);
                     cm.stage.addChild(this.buttons[i]);
                 }
                 this.shown = true;
             }
-            var img = new createjs.Bitmap("images/start_btn.png");
-            cm.stage.addChild(img);
         } else {
             throw "Cannot show non-loaded menu.";
         }
+        cm.update();
     }
 
     this.hide = function(cm) {
@@ -64,12 +60,17 @@ function Menu() {
         fn - function to call
 */
 
-function createButton(URL, position, frameSize, animBounds, fn) {
+function createButton(URL, cm, position, frameSize, animBounds, fn) {
 
-    debug.log("creating a button");
     // TODO: Replace this animation stuff with animation class
+    var buttonImg = new Image();
+    buttonImg.onload = function() {
+        cm.update();
+    };
+    buttonImg.src = URL;
+
     var buttonSheet = new createjs.SpriteSheet({
-        images: [URL],
+        images: [buttonImg],
         frames: {width: frameSize.width, height:frameSize.height,
                  regX: frameSize.width/2, regY: frameSize.height/2},
         animations: {
@@ -78,7 +79,6 @@ function createButton(URL, position, frameSize, animBounds, fn) {
             down: [animBounds.down.start, animBounds.down.end, "down"]
         }
     });
-    debug.log(animBounds.over.end);
 
     var buttonSprite = new createjs.Sprite(buttonSheet, "out");
 
@@ -87,7 +87,6 @@ function createButton(URL, position, frameSize, animBounds, fn) {
 
     var btnHelper = new createjs.ButtonHelper(buttonSprite, "out", "over", "down", true);
     buttonSprite.addEventListener("click", fn);
-    console.log("buttonSprite:", buttonSprite);
     return buttonSprite;
 }
 
@@ -110,8 +109,6 @@ function createButton(URL, position, frameSize, animBounds, fn) {
 
 Menu.load = function(filename, callback, cm, functions) {
 
-    debug.log("loading menu...");
-
     $.ajax({
         url : "menus/" + filename,
         success : function(data) {
@@ -122,19 +119,23 @@ Menu.load = function(filename, callback, cm, functions) {
             //get BG image
             var bg;
             if ("bg_image" in menu) {
-                bg = new createjs.Bitmap(menu.bg_image);
+                var img = new Image();
+                img.onload = function() {
+                    cm.update();
+                };
+                img.src = menu.bg_image;
+                bg = new createjs.Bitmap(img);
+                bg.x = 0;
+                bg.y = 0;
             } else {
                 bg = new createjs.Shape();
                 bg.graphics.beginFill("#FF0000").drawRect(
                     0, 0, cm.getCanvasWidth(), cm.getCanvasHeight());
             }
-            
-            bg.x = bg.y = 0;
 
             //get buttons
             var buttons = [];
             if ("buttons" in menu) {
-                debug.log("buttons in menu");
                 for (var i=0, l=menu.buttons.length; i < l; i++) {
 
                     var buttonDef = menu.buttons[i];
@@ -143,7 +144,6 @@ Menu.load = function(filename, callback, cm, functions) {
                     } else {
                         var name = "Button " + i.toString();
                     }
-                    debug.log(("Button name: " + name));
                     // position
                     if ("x" in buttonDef && "y" in buttonDef) {
                         var position = {x: buttonDef.x, y: buttonDef.y};
@@ -179,14 +179,10 @@ Menu.load = function(filename, callback, cm, functions) {
                         } else throw (buttonDef.func + " is not a valid function");
                     } else throw (name + " has no function");
 
-                    buttons.push(createButton(URL, position, frameSize,
+                    buttons.push(createButton(URL, cm, position, frameSize,
                                               bounds, fn));
                 }
             }
-
-            console.log("before callback: ");
-            console.log("bg:", bg);
-            console.log("buttons:", buttons);
 
             // "return" everything
             callback({background: bg,

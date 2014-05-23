@@ -1,4 +1,5 @@
 {
+    "bg_image" : "images/startmenu.jpg",
     "buttons" : [
         {
             "name" : "start",

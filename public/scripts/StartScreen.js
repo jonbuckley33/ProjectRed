@@ -9,9 +9,6 @@
 function StartScreen(functions) {
 
 	function loadedCall(data, startScreen) {
-		console.log("finished loading");
-		console.log('bg:', data.background);
-		console.log('buttons', data.buttonsArray);
 		startScreen.bg = data.background;
 		startScreen.buttons = data.buttonsArray;
 		startScreen.loaded = true;
