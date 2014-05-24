@@ -12,8 +12,6 @@ function ParallaxBackground(img, camera) {
 	this.img.x = 0;
 	this.img.y = 0;
 
-	debug.log("background image")
-	debug.log(this.img)
 	this.update = function(camera) {
 		//get bounds of camera
 		var bounds = this.img.getBounds();

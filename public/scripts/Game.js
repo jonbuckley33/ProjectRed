@@ -59,8 +59,8 @@ function Game(gameData)
 
 	//camera instance
 	var camera = new Camera(
-		new b2Vec2(10, 6), 
-		{width : 20, height: 12}, 
+		new b2Vec2(12, 6), 
+		{width : 24, height: 12}, 
 		level.bounds);
 
 	function spawnHero() {

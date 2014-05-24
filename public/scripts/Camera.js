@@ -99,7 +99,7 @@ function Camera(position, size, bounds) {
 
         this.constrain();
 
-        this.refreshEdges()
+        this.refreshEdges();
     }
 
     this.moveTo = function(position) {
