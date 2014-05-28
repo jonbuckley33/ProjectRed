@@ -33,6 +33,9 @@ function GameManager()
 			//removes loading bar from screen
 			loadingBar.destroy();
 			
+			//reset listeners
+			assetQueue.removeAllEventListeners();
+
 			//proceed to start screen
 			startScreen();
 		});
@@ -122,6 +125,9 @@ function GameManager()
 		assetQueue.on("complete", function() {
 			//removes loading bar from screen
 			loadingBar.destroy();
+			
+			//reset listeners
+			assetQueue.removeAllEventListeners();
 			
 			//proceed to start screen
 			playGame();
