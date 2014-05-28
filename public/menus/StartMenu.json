@@ -1,11 +1,13 @@
 {
-    "bg_image" : "images/startmenu.jpg",
+    "bg_image" : {
+        "UID" : "start_menu_background"
+    },
     "buttons" : [
         {
+            "UID" : "start_button",
             "name" : "start",
             "x" : 500,
             "y" : 300,
-            "filepath" : "images/start_btn.png",
             "animDef": {
                 "width": 80,
                 "height": 30,

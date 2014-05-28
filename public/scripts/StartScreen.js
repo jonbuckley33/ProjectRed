@@ -14,9 +14,9 @@ function StartScreen(functions) {
 		startScreen.loaded = true;
 	}
 
-	this.init = function(canvasManager, callback) {
+	this.init = function(canvasManager, assetQueue, callback) {
 		var self = this;
-		Menu.load("StartMenu.json", function(data) {
+		Menu.load("StartMenu.json", assetQueue, function(data) {
 										loadedCall(data, self);
 										callback();
 									}, canvasManager, functions);

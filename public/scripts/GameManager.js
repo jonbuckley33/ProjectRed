@@ -6,6 +6,8 @@ function GameManager()
 	//continue data pertaining to built game
 	var gameData = {};
 
+	var assetQueue;
+
 	var loadBar, loadMask, loadBg;
 
 	function initialize() {
@@ -15,19 +17,18 @@ function GameManager()
 		gameData.canvasManager = canvasManager;
 
 		//start loading stuff
-		startScreen();
-		//createLoadingBar();
-		//loadResources();
+		//startScreen();
+		createLoadingBar();
 	}
 
 	function createLoadingBar() {
-		loadBg = new createjs.Bitmap("public/images/load_bg.jpg");
+		loadBg = new createjs.Bitmap("images/load_bg.jpg");
 		loadBg.x = canvasManager.getCanvasWidth / 2;
 		loadBg.y = canvasManager.getCanvasHeight / 2;
 		canvasManager.stage.addChild(loadBg);
 
 		var loadSheet = new createjs.SpriteSheet({
-			images: ["public/images/loadbar.png"],
+			images: ["images/loadbar.png"],
 			frames: {width: 125, height: 30, regX: 62.5, regY: 0},
 			animations: {
 				load: [0, 16, "load"]
@@ -42,10 +43,19 @@ function GameManager()
 		loadMask = new createjs.Shape();
 
 		canvasManager.update();
+		loadResources();
 	}
 
 	function loadResources() {
+		//instantiate pipeline
+		assetQueue = new createjs.LoadQueue();
 
+		//setup progress bar updater, and complete handler
+		assetQueue.on("progress", progress);
+		assetQueue.on("complete", loadingComplete);
+
+		//load initial manifest
+		assetQueue.loadManifest("manifests/initialManifest.json");
 	}
 
 	function progress(e) {
@@ -57,6 +67,12 @@ function GameManager()
 		];
 		loadBar.cache(0, 0, 125, 30);
 		canvasManager.update();
+	}
+
+	function loadingComplete()
+	{
+		destroyLoadingBar();
+		startScreen();
 	}
 
 	function destroyLoadingBar() {
@@ -79,7 +95,9 @@ function GameManager()
 					signIn();
 				}
 			});
-		startScreen.init(canvasManager, function() {startScreen.show(canvasManager)});
+		startScreen.init(canvasManager, assetQueue, function() {
+			startScreen.show(canvasManager)
+		});
 		createjs.Ticker.addEventListener("tick", canvasUpdate);
 	}
 
