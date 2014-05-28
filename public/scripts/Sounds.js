@@ -1,12 +1,11 @@
 function Sounds(){
 
-	var soundPath = "";
 	this.manifest  = [
     	{id:"background", src:"sounds/backgroundMusic.mp3"}
 	];
 	createjs.Sound.alternateExtensions = ["mp3"];
 	createjs.Sound.addEventListener("fileload", handleLoad);
-    this.loaded = createjs.Sound.registerManifest(this.manifest, soundPath);
+    this.loaded = createjs.Sound.registerManifest(this.manifest, "");
     function handleLoad(event) {
     	debug.log(event.id + " loaded");
 	}
