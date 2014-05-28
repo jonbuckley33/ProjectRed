@@ -24,6 +24,7 @@ function GameManager()
 	//protagonist
 	var hero;
 
+
 	//array of actors in game
 	var actors = [];
 
@@ -115,6 +116,7 @@ function GameManager()
 				break;
 
 			case gameState.RUNNING:
+
 				//kill the old actors
 				for (var i = 0; i < toDestroyActors.length; i++) {
 					world.DestroyBody(toDestroyActors[i].body);
@@ -139,6 +141,7 @@ function GameManager()
 					actors[i].update(camera);
 				}
 				//repaint
+
 				canvasManager.update();
 				break;
 
@@ -150,6 +153,10 @@ function GameManager()
 			case gameState.GAME_OVER:
 				break;
 		};
+	}
+
+	this.getHero = function(){
+		return hero;
 	}
 
 	var blackRect, logo, loadingAnim;

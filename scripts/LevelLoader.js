@@ -76,10 +76,10 @@ var defaultRestitution = 0.1;
 		Actor
 
 */
-LevelLoader.hydrate = function(actorDef, world, cm,animations) {
+LevelLoader.hydrate = function(actorDef, world, cm,animations,camera) {
 	var bodyDef = new b2BodyDef;
 	var fixDef = new b2FixtureDef;
-	var skin = new createjs.Shape();
+	var skin = new Skin(camera);
 	
 	//we can make these settable properties, but for now, we won't
 	fixDef.restitution = defaultRestitution;
@@ -88,6 +88,7 @@ LevelLoader.hydrate = function(actorDef, world, cm,animations) {
 	if ("graphics" in actorDef){
 
 		if ("type" in actorDef.graphics){
+			skin.setType(actorDef.graphics.type);
 			if (actorDef.graphics.type == "shape"){
 				if ("shapeDef" in actorDef.graphics){
 					var shape = actorDef.graphics.shapeDef;
@@ -99,28 +100,20 @@ LevelLoader.hydrate = function(actorDef, world, cm,animations) {
 		        		   	shape.radius //radius
 		        		   	); 
 
-						skin.graphics.beginFill(color).drawCircle(0, 0, Converter.gameToCanvas(shape.radius));
+						skin.loadCircle(shape.radius,color);
 						break;
 
 						case "rect":
 						fixDef.shape = new b2PolygonShape;
-						fixDef.shape.SetAsBox(shape.width / 2, shape.height / 2);
-
-						var widthPix = Converter.gameToCanvas(shape.width);
-						var heightPix = Converter.gameToCanvas(shape.height);
-
-						skin.graphics.beginFill(color).drawRect(-widthPix/2, -heightPix/2, widthPix, heightPix);
+						fixDef.shape.SetAsBox(shape.width / 2, shape.height / 2,color);
+						skin.loadRect(shape.width,shape.height,color);
 						break;
 
 						default: 
 						//unit rect
 						fixDef.shape = new b2PolygonShape;
 						fixDef.shape.SetAsBox(1, 1);
-
-						var widthPix = Converter.gameToCanvas(1);
-						var heightPix = Converter.gameToCanvas(1);
-
-						skin.graphics.beginFill(color).drawRect(-widthPix/2, -heightPix/2, widthPix, heightPix);
+						skin.loadRect(1,1,color);
 						break;
 					}
 
@@ -131,11 +124,17 @@ LevelLoader.hydrate = function(actorDef, world, cm,animations) {
 				if ("animationDef" in actorDef.graphics){
 					var anim = actorDef.graphics.animationDef;
 					var start = 0;
+					var sizeW = 1;
+					var sizeH = 1;
 					if (anim in animations){
 						animDef = animations[anim]
 						if ("startingAnim" in animDef) start = animDef.startingAnim
-						skin = animLoad(animDef.filepath,animDef.frameWidth,animDef.frameHeight
-										,animDef.animations,start);
+						if ("width" in actorDef) sizeW = actorDef.width;
+						if ("height" in actorDef) sizeH = actorDef.height;
+						
+						skin.loadAnimation(animDef.frameWidth,animDef.frameHeight,animDef.filepath
+										  ,start,animDef.animations,sizeW,sizeH);
+
 						fixDef.shape = new b2PolygonShape;
 						fixDef.shape.SetAsBox(Converter.canvasToGame(animDef.frameWidth/2)
 											,Converter.canvasToGame(animDef.frameHeight/2));
@@ -158,25 +157,23 @@ LevelLoader.hydrate = function(actorDef, world, cm,animations) {
     	bodyDef.position.x = actorDef.position.x;
     	bodyDef.position.y = actorDef.position.y;
 
-    	skin.x = Converter.gameToCanvas(actorDef.position.x);
-    	skin.y = Converter.gameToCanvas(actorDef.position.y);
+    	skin.setPosition(actorDef.position.x,actorDef.position.y);
     } else {
     	//default to placing in top left
     	bodyDef.position.x = 0;
     	bodyDef.position.y = 0;
 
-    	skin.x = Converter.gameToCanvas(0);
-    	skin.y = Converter.gameToCanvas(0);
+    	skin.setPosition(0,0);
     }
 
     //extract rotation
     if ("rotation" in actorDef) {
     	bodyDef.angle = actorDef.rotation * (Math.PI/180);
-    	skin.rotation = actorDef.rotation;
+    	skin.setRotation(actorDef.rotation);
     } else {
     	//default to no rotation
     	bodyDef.angle = 0;
-    	skin.rotation = 0;
+    	skin.setRotation(0);
     }
     
     //define the body to be static or dynamic
@@ -237,11 +234,12 @@ LevelLoader.hydrate = function(actorDef, world, cm,animations) {
 
 		<LevelLoader.hydrate>
 */
-function loadStartEnd(levelDef, world, cm) {
+function loadStartEnd(levelDef, world, cm,animations,camera) {
 	if ("start" in levelDef && "end" in levelDef) {
 		//hydrate the actors playing the start and end 
-		var start = LevelLoader.hydrate(levelDef.start, world, cm),
-			end = LevelLoader.hydrate(levelDef.end, world, cm);
+
+		var start = LevelLoader.hydrate(levelDef.start, world, cm,animations,camera),
+			end = LevelLoader.hydrate(levelDef.end, world, cm,animations,camera);
 
 		start.classes.push("start");
 		end.classes.push("end");
@@ -301,7 +299,7 @@ LevelLoader.load = function(fileName, callback, cm, camera)
 			var hero;
 
 			//gets beginning and ending of level
-			var startEnd = loadStartEnd(level, world, cm);
+			var startEnd = loadStartEnd(level, world, cm,animations,camera);
 			var start = startEnd.start,
 				end = startEnd.end;
 
@@ -312,8 +310,9 @@ LevelLoader.load = function(fileName, callback, cm, camera)
 			if ("staticActors" in level) {
 				for (var i = 0; i < level.staticActors.length; i++)
 				{
+					debug.log("l");
 					var actorDef = level.staticActors[i];
-					var actor = LevelLoader.hydrate(actorDef, world, cm,animations);
+					var actor = LevelLoader.hydrate(actorDef, world, cm,animations,camera);
 
 					actors.push(actor);
 				}
@@ -327,7 +326,7 @@ LevelLoader.load = function(fileName, callback, cm, camera)
 				for (var i = 0; i < level.dynamicActors.length; i++)
 				{
 					var actorDef = level.dynamicActors[i];
-					var actor = LevelLoader.hydrate(actorDef, world, cm,animations);
+					var actor = LevelLoader.hydrate(actorDef, world, cm,animations,camera);
 
 					//sets hero ref
 					if (actor.isHero) {

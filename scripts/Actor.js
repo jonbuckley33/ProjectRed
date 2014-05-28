@@ -25,16 +25,15 @@ function Actor(skin, body)
 		var body = this.body;
 		
 		//update rotation
-		this.skin.rotation = this.body.GetBody().GetAngle() * (180 / Math.PI);
+		this.skin.setRotation(this.body.GetBody().GetAngle() * (180 / Math.PI));
 
 		//update position
-		screenPos = camera.worldToScreen(this.body.GetBody().GetPosition());
-		this.skin.x = screenPos.x;
-		this.skin.y = screenPos.y;
+		var worldPos = this.body.GetBody().GetPosition();
+		this.skin.setPosition(worldPos.x,worldPos.y);
 
 		//update scale
 		var scale = camera.getScale();
-		this.skin.scaleX = this.skin.scaleY = scale;
+		this.skin.setScale(scale);
 
 		if (initialUpdate) {
 			this.setupMouseEvents(camera);
@@ -57,8 +56,8 @@ function Actor(skin, body)
 	*/
 	this.setAnimation = function(str) {
 
-		if (this.skin.currentAnimation != str) {
-			this.skin.gotoAndPlay(str);
+		if (this.skin.getAnimation() != str) {
+			this.skin.setAnimation(str);
 		}
 	};
 
@@ -67,18 +66,18 @@ function Actor(skin, body)
 
 	this.setupMouseEvents = function(camera) {
 		//sets up mouse events
-		this.skin.on("mousedown", function(evt) {
+		this.skin.getSkin().on("mousedown", function(evt) {
 			//sleep, child
 			body.GetBody().SetAwake(false);
 		});
 
-		this.skin.on("pressmove", function(evt) {
+		this.skin.getSkin().on("pressmove", function(evt) {
 			//drag and drop the dude
 	    	body.GetBody().SetPosition(camera.screenToWorld(evt.stageX,evt.stageY));
 	    	body.GetBody().SetAwake(false);
 		});
 			
-		this.skin.on("pressup", function(evt) {
+		this.skin.getSkin().on("pressup", function(evt) {
 	   		//wake him up
 	    	body.GetBody().SetAwake(true);
 	    	body.GetBody().SetSleepingAllowed(true);

@@ -86,6 +86,8 @@
 			"name" : "ball",
 			"fixed" : false,
 			"position" : {"x" : 10, "y" : 1},
+			"width" : 3,
+			"height" : 3,
 			"density" : 5.0,
 			"classes" : ["americanHero"],
 			"graphics" : {

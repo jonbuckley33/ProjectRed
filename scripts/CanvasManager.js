@@ -50,12 +50,12 @@ function CanvasManager()
 
     //adds actor skin to stage
     this.addActor = function(child) {
-        this.stage.addChild(child.skin);
+        this.stage.addChild(child.skin.getSkin());
     }
 
     //removes actor skin from stage
     this.removeActor = function(child) {
-        this.stage.removeChild(child.skin);
+        this.stage.removeChild(child.skin.getSkin());
     }
 
     //repaints
