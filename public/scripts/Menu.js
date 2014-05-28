@@ -60,11 +60,10 @@ function Menu() {
         fn - function to call
 */
 
-function createButton(URL, cm, position, frameSize, animBounds, fn) {
+function createButton(UID, assetQueue, cm, position, frameSize, animBounds, fn) {
 
     // TODO: Replace this animation stuff with animation class
-    var buttonImg = new Image();
-    buttonImg.src = URL;
+    var buttonImg = assetQueue.getResult(UID);
 
     var buttonSheet = new createjs.SpriteSheet({
         images: [buttonImg],
@@ -104,7 +103,7 @@ function createButton(URL, cm, position, frameSize, animBounds, fn) {
         void
 */
 
-Menu.load = function(filename, callback, cm, functions) {
+Menu.load = function(filename, assetQueue, callback, cm, functions) {
 
     $.ajax({
         url : "menus/" + filename,
@@ -116,14 +115,15 @@ Menu.load = function(filename, callback, cm, functions) {
             //get BG image
             var bg;
             if ("bg_image" in menu) {
-                var img = new Image();
-                img.onload = function() {
-                    cm.update();
-                };
-                img.src = menu.bg_image;
-                bg = new createjs.Bitmap(img);
-                bg.x = 0;
-                bg.y = 0;
+                if ("UID" in menu.bg_image) {
+                    var img = assetQueue.getResult(menu.bg_image.UID)
+                    bg = new createjs.Bitmap(img);
+                    bg.x = 0;
+                    bg.y = 0;    
+                } else {
+                    throw "No UID defined for graphics object";
+                }
+                
             } else {
                 bg = new createjs.Shape();
                 bg.graphics.beginFill("#FF0000").drawRect(
@@ -136,6 +136,13 @@ Menu.load = function(filename, callback, cm, functions) {
                 for (var i=0, l=menu.buttons.length; i < l; i++) {
 
                     var buttonDef = menu.buttons[i];
+                    var UID;
+                    if ("UID" in buttonDef) {
+                        UID = buttonDef.UID;
+                    } else {
+                        throw "No UID for button found";
+                    }
+
                     if ("name" in buttonDef) {
                         var name = buttonDef.name;
                     } else {
@@ -146,11 +153,6 @@ Menu.load = function(filename, callback, cm, functions) {
                         var position = {x: buttonDef.x, y: buttonDef.y};
                     } else throw (name + " has no position");
                     
-                    // filename
-                    if ("filepath" in buttonDef) {
-                        var URL = buttonDef.filepath;
-                    } else throw (name + " has no image");
-
                     // animationDef
                     if ("animDef" in buttonDef) {
                         if ("width" in buttonDef.animDef &&
@@ -176,8 +178,8 @@ Menu.load = function(filename, callback, cm, functions) {
                         } else throw (buttonDef.func + " is not a valid function");
                     } else throw (name + " has no function");
 
-                    buttons.push(createButton(URL, cm, position, frameSize,
-                                              bounds, fn));
+                    buttons.push(createButton(UID, assetQueue, cm, position, 
+                        frameSize, bounds, fn));
                 }
             }
 
