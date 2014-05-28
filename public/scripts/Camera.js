@@ -21,8 +21,6 @@ function Camera(position, size, bounds, screenSize) {
 
     this.bounds = bounds;
 
-    console.log(screenSize);
-
     this.screenWidth = screenSize.width;
     this.screenHeight = screenSize.height;
 
