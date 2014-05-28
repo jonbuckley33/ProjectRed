@@ -4,56 +4,7 @@ function LevelLoader() {
 
 var heroImageURL = "../images/exSpriteRun.png"
 
-/*
-	Function: animLoad
 
-	sets up bitmap animation skin based on 
-	JSON preferences
-
-	Parameters: 
-
-		URL - filepath
-		frameW - frame width
-		frameH - frame height
-		anims - animations array 
-		start - starting/default animation
-
-	Returns:
-
-		BitmapAnimation
-
-*/
-function animLoad (URL,frameW,frameH,anims,start){
-
-	//Initialize Image
-	var image = new Image();
-	image.src = URL;
-
-	//Configure animations in correct format for 
-	//sprite sheet
-	var animations = {};
-	for (i = 0; i < anims.length; i++){
-       animations[anims[i].name] = [anims[i].begin, anims[i].end]
-    }
-
-	//Setup Sprite Sheet
-	var spriteSheet = new createjs.SpriteSheet({
-		images: [image], 
-		frames: {width: frameW, height: frameH, regX: frameW/2, regY: frameH/2}, 
-		animations: animations
-        });
-
-	//creates animation skin object
-	bmpAnimation = new createjs.BitmapAnimation(spriteSheet);
-
-    //anim switch speed
-    bmpAnimation.vX = 1;
-
-	bmpAnimation.gotoAndPlay(anims[start].name);  
-
-
-    return bmpAnimation;
-}
 
 var defaultDensity = 1.0;
 var defaultFriction = 0.4;

@@ -11,6 +11,9 @@ function GameManager()
 	//loading bar
 	var loadingBar;
 
+	//music
+	var sounds;
+
 	function initialize() {
 		canvasManager = new CanvasManager("mainCanvas");
 
@@ -26,22 +29,28 @@ function GameManager()
 	function loadResources() {
 		//instantiate pipeline
 		assetQueue = new createjs.LoadQueue();
+		assetQueue.installPlugin(createjs.Sound);
+		//load music
+		sounds = new Sounds();
 
 		//setup progress bar updater, and complete handler
 		assetQueue.on("progress", loadingBar.progress);
 		assetQueue.on("complete", function() {
 			//removes loading bar from screen
 			loadingBar.destroy();
-			
+			sounds.playSound("background",false);
 			//proceed to start screen
 			startScreen();
 		});
 
 		//load initial manifest
 		assetQueue.loadManifest("manifests/initialManifest.json");
+
+		assetQueue.loadManifest(sounds.manifest);
 	}
 
 	function startScreen() {
+
 		//construct start screen and show it
 		var startScreen = new StartScreen(
 			{

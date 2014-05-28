@@ -63,6 +63,7 @@ function Game(gameData)
 		{width : 24, height: 12}, 
 		level.bounds);
 
+	var sounds;
 
 	function spawnHero() {
 		//puts hero above spawn
@@ -78,6 +79,7 @@ function Game(gameData)
 	function run(event) {
 		switch (state) {
 			case GameStates.INITIALIZING:
+				sounds = new Sounds();
 				//create and add background
 				parallaxBackground = new ParallaxBackground(level.background, camera);
 				canvasManager.stage.addChild(parallaxBackground.img);
