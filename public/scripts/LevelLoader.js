@@ -79,7 +79,7 @@ var defaultRestitution = 0.1;
 LevelLoader.hydrate = function(actorDef, world, cm,animations,camera) {
 	var bodyDef = new b2BodyDef;
 	var fixDef = new b2FixtureDef;
-	var skin = new Skin(camera);
+	var skin = new Skin();
 	
 	//we can make these settable properties, but for now, we won't
 	fixDef.restitution = defaultRestitution;
@@ -100,20 +100,22 @@ LevelLoader.hydrate = function(actorDef, world, cm,animations,camera) {
 		        		   	shape.radius //radius
 		        		   	); 
 
-						skin.loadCircle(shape.radius,color);
+						skin.loadCircle(camera.worldToScreenSize(shape.radius),color);
 						break;
 
 						case "rect":
 						fixDef.shape = new b2PolygonShape;
 						fixDef.shape.SetAsBox(shape.width / 2, shape.height / 2,color);
-						skin.loadRect(shape.width,shape.height,color);
+						skin.loadRect(camera.worldToScreenSize(shape.width),
+							camera.worldToScreenSize(shape.height),color);
 						break;
 
 						default: 
 						//unit rect
 						fixDef.shape = new b2PolygonShape;
 						fixDef.shape.SetAsBox(1, 1);
-						skin.loadRect(1,1,color);
+						skin.loadRect(camera.worldToScreenSize(1),
+							camera.worldToScreenSize(1),color);
 						break;
 					}
 

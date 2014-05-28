@@ -26,8 +26,9 @@ function HeroSelect(canvasManager, functions) {
     	bodyDef.type = b2Body.b2_dynamicBody;
 
     	var constructHero = function(level) {
-    		var skin = new Skin(level.camera);
-    		skin.loadRect(1,1,"red");
+    		var skin = new Skin();
+    		skin.loadRect(level.camera.worldToScreenSize(1),
+    			level.camera.worldToScreenSize(1),"red");
     		skin.setPosition(0,0);
 			skin.setRotation(0);
 

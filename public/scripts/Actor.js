@@ -29,7 +29,8 @@ function Actor(skin, body)
 
 		//update position
 		var worldPos = this.body.GetBody().GetPosition();
-		this.skin.setPosition(worldPos.x,worldPos.y);
+		var screenPos = camera.worldToScreen(worldPos);
+		this.skin.setPosition(screenPos);
 
 		//update scale
 		var scale = camera.getScale();

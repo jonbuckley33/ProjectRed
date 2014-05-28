@@ -1,7 +1,4 @@
-function Skin(camera){
-
-	this.camera = camera;
-
+function Skin(){
 	//shape def or animation def
 	var typeDef;
 
@@ -51,9 +48,7 @@ function Skin(camera){
 
 	this.loadCircle= function(radius,color){
 		shape = new createjs.Shape();
-		var coord = this.camera.worldToScreen(new b2Vec2(radius,0));
-		shapeRadius = coord.x;
-		shape.graphics.beginFill(color).drawCircle(0, 0, shapeRadius);
+		shape.graphics.beginFill(color).drawCircle(0, 0, radius);
 		radSize = radius;
 		this.setType("shape");
 		skin = shape;				
@@ -61,27 +56,22 @@ function Skin(camera){
 
 	this.loadRect= function(width,height,color){
 		shape = new createjs.Shape();
-		var coord = this.camera.worldToScreen(new b2Vec2(width,height));
-		shapeWidth = coord.x;
-		shapeHeight = coord.y;
 		xSize = width;
 		ySize = height;
 		this.setType("shape");
-		shape.graphics.beginFill(color).drawRect(-shapeWidth/2, -shapeHeight/2, shapeWidth,shapeHeight);
+		shape.graphics.beginFill(color).drawRect(-width/2, -height/2,
+			width, height);
 		skin = shape;
 	}
-	this.setPosition = function(xPosition,yPosition){
-		var coord = this.camera.worldToScreen(new b2Vec2(xPosition,yPosition));
-		x = coord.x;
-		y = coord.y;
+	this.setPosition = function(screenPos){
 		if (typeDef == "shape"){
-			shape.x = x;
-			shape.y = y;
+			shape.x = screenPos.x;
+			shape.y = screenPos.y;
 		}else{
-			sprite.x = x;
-			sprite.y = y;
+			sprite.x = screenPos.x;
+			sprite.y = screenPos.y;
 		}
-		this.getSkin();
+		this.updateSkin();
 	}
 
 	this.setRotation = function(rot){
@@ -91,7 +81,7 @@ function Skin(camera){
 		}else{
 			sprite.rotation = rotation;
 		}
-		this.getSkin();
+		this.updateSkin();
 	}
 
 
@@ -109,7 +99,7 @@ function Skin(camera){
 			sprite.scaleX = xScale;
 			sprite.scaleY = yScale;
 		}
-		this.getSkin(); 
+		this.updateSkin(); 
 	}
 
 	this.setScale = function(scale){
@@ -122,7 +112,7 @@ function Skin(camera){
 			sprite.scaleX = xScale;
 			sprite.scaleY = yScale;
 		}
-		this.getSkin(); 
+		this.updateSkin(); 
 	}
 
 	this.loadAnimation = function(w,h,path,start,anims,sizeW,sizeH){
@@ -162,9 +152,22 @@ function Skin(camera){
 		return sprite.currentAnimation;
 	}
 
+	/*
+		Function : updateSkin
+
+		updates the underlying skin object
+	*/
+	this.updateSkin = function() {
+		if (typeDef == "shape") {
+			skin = shape;
+		} else {
+			skin = sprite;
+		}
+	}
+
 	this.getSkin = function(){
-		if (typeDef == "shape")skin = shape;
-		else skin = sprite;
+		this.updateSkin();
+
 		return skin;
 	}
 
