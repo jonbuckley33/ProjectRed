@@ -25,20 +25,22 @@ function HeroSelect(canvasManager, functions) {
 
     	bodyDef.type = b2Body.b2_dynamicBody;
 
-    	var constructHero = function(level) {
-    		var skin = new Skin();
-    		skin.loadRect(level.camera.worldToScreenSize(1),
-    			level.camera.worldToScreenSize(1),"red");
-    		skin.setPosition(0,0);
-			skin.setRotation(0);
+    	var constructHero = function(world, canvasManager, animations, camera, assetQueue) {
+    		var heroDef = {
+    			fixed : false,
+    			graphics : {
+    				type : "animation",
+    				animationDef : "hero"
+    			},
+    			width : 50,
+    			height : 50
+    		};
 
-			//skin.x = Converter.gameToCanvas(0);
-    		//skin.y = Converter.gameToCanvas(0);
+    		var hero = LevelLoader.hydrate(heroDef, world, canvasManager, animations,
+    			camera, assetQueue);
 
-
-    		var body = level.world.CreateBody(bodyDef).CreateFixture(fixDef);
-			var hero = new Actor(skin, body);
-			
+    		//make hero-y
+    		hero.body.GetBody().SetFixedRotation(true);
 			hero.isHero = true;
 			hero.classes.push("americanHero");
 

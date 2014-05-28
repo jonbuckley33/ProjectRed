@@ -11,6 +11,7 @@
 			.level- the level
 			.gameCompleted - callback for when game is over
 			.camera - the camera for the game
+			.assetQueue - the pipeline for content
 */
 function Game(gameData)
 {
@@ -64,9 +65,13 @@ function Game(gameData)
 		{width : canvasManager.getCanvasWidth(),
 		 height : canvasManager.getCanvasHeight()});
 	level.camera = camera;
-	var hero = gameData.heroMaker(level);
+
+	var hero;
 
 	function spawnHero(start) {
+		hero = gameData.heroMaker(world, canvasManager, level.animations, 
+			camera, assetQueue);
+
 		//puts hero above spawn
 		var startPos = start.body.GetBody().GetPosition();
 		var heroPos = new b2Vec2(startPos.x, startPos.y - 3);
@@ -91,9 +96,9 @@ function Game(gameData)
 				//make start and end
 				var makeStartEnd = level.startEnd;
 				var start = makeStartEnd.start(world, canvasManager, 
-					level.animations, camera);
+					level.animations, camera, assetQueue);
 				var end = makeStartEnd.end(world, canvasManager, 
-					level.animations, camera);
+					level.animations, camera, assetQueue);
 				end.classes.push("end");
 
 				actors.push(start);
@@ -105,7 +110,7 @@ function Game(gameData)
 				for (var i = 0; i < level.actors.length; i++) {
 					var makeActor = level.actors[i];
 					var actor = makeActor(world, canvasManager, 
-						level.animations, camera);
+						level.animations, camera, assetQueue);
 
 					//push to stack
 					actors.push(actor);

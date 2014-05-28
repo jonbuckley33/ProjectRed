@@ -3,6 +3,10 @@
 		{
 			"id" : "background",
 			"src" : "art/backgroundv3.png"
+		},
+		{
+			"id" : "monster_animation",
+			"src" : "images/Monster.png"
 		}
 	]
 }
