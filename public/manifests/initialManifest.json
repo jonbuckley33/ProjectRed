@@ -7,6 +7,10 @@
 		{
 			"id" : "start_button",
 			"src" : "images/start_btn.png"
+		},
+		{
+			"id" : "other_button",
+			"src" : "images/other_btn.png"
 		}
 	]
 }
