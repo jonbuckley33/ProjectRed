@@ -98,7 +98,7 @@ function Game(gameData)
 				Keyboard.bind({
 					heroMove : heroController.heroMove,
 					heroStop : heroController.heroStop
-				}, canvasManager);
+				}, camera);
 
 				//add actors to stage
 				for (var i = 0; i < actors.length; i++) {

@@ -26,7 +26,9 @@ function Menu() {
         if (this.shown) {
             cm.stage.removeChild(this.bg);
             for (var i=0, l=this.buttons.length; i < l; i++) {
-                cm.stage.removeChild(this.buttons[i]);
+                var btn = this.buttons[i];
+                btn.removeEventListener("click", btn.buttonFn);
+                cm.stage.removeChild(btn);
             }
             this.shown = false;
         }
@@ -83,6 +85,7 @@ function createButton(UID, assetQueue, cm, position, frameSize, animBounds, fn) 
 
     var btnHelper = new createjs.ButtonHelper(buttonSprite, "out", "over", "down", true);
     buttonSprite.addEventListener("click", fn);
+    buttonSprite.buttonFn = fn;
     return buttonSprite;
 }
 
