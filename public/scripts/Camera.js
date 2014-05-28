@@ -117,6 +117,16 @@ function Camera(position, size, bounds, screenSize) {
 
     this.zoom = function(factor) {
         oneMeter *= 1/factor;
+
+        this.width *= factor;
+        this.height *= factor;
+
+        while (this.width > this.bounds.right - this.bounds.left ||
+               this.height > this.bounds.bottom - this.bounds.top) {
+            oneMeter *= 101/100;
+            this.width *= 100/101;
+            this.height *= 100/101;
+        }
     }
 
     this.getScale = function() {
