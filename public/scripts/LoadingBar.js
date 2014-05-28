@@ -38,7 +38,7 @@ function LoadingBar() {
             animations: {
                 load: [0, 16, "load"]
             }
-        })
+        });
         loadBar = new createjs.Sprite(loadSheet, "load");
         loadBar.x = loadBg.x - width/2;
         loadBar.y = loadBg.y - height/2;

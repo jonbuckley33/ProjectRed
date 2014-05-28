@@ -6,8 +6,8 @@
         {
             "UID" : "start_button",
             "name" : "start",
-            "x" : 500,
-            "y" : 300,
+            "x" : 400,
+            "y" : 260,
             "animDef": {
                 "width": 80,
                 "height": 30,
@@ -22,8 +22,8 @@
         {
             "UID" : "other_button",
             "name" : "other",
-            "x" : 500,
-            "y" : 350,
+            "x" : 400,
+            "y" : 310,
             "animDef": {
                 "width": 100,
                 "height": 30,

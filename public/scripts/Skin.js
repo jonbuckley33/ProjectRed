@@ -103,8 +103,8 @@ function Skin(){
 	}
 
 	this.setScale = function(scale){
-		xScale *= scale;
-		yScale *= scale;
+		xScale = scale;
+		yScale = scale;
 		if(typeDef == "shape"){
 			shape.scaleX = xScale;
 			shape.scaleY = yScale;

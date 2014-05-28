@@ -2,7 +2,7 @@
 	"manifest" : [
 		{
 			"id" : "start_menu_background",
-			"src" : "images/startmenu.jpg" 
+			"src" : "images/start_menu.png" 
 		},
 		{
 			"id" : "start_button",
