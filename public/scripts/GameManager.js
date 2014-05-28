@@ -15,8 +15,9 @@ function GameManager()
 		gameData.canvasManager = canvasManager;
 
 		//start loading stuff
-		createLoadingBar();
-		loadResources();
+		startScreen();
+		//createLoadingBar();
+		//loadResources();
 	}
 
 	function createLoadingBar() {

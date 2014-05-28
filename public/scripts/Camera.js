@@ -121,4 +121,8 @@ function Camera(position, size, bounds) {
     this.oneMeter = function() {
         return oneMeter;
     }
+
+    this.worldToScreenSize = function(worldSize) {
+        return oneMeter * worldSize;
+    }
 }
