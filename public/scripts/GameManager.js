@@ -102,12 +102,34 @@ function GameManager()
 				gameData.level = level;
 				levelSelect.hide();
 
-				playGame();
+				loadLevel();
 			}
 		});
 
 		//show level select
 		levelSelect.show();
+	}
+
+	function loadLevel() {
+		//clear the canvas
+		canvasManager.clear();
+
+		//show loading bar
+		loadingBar.init(canvasManager);
+
+		//setup progress bar updater, and complete handler
+		assetQueue.on("progress", loadingBar.progress);
+		assetQueue.on("complete", function() {
+			//removes loading bar from screen
+			loadingBar.destroy();
+			
+			//proceed to start screen
+			playGame();
+		});
+
+		//load initial manifest
+		gameData.assetQueue = assetQueue;
+		assetQueue.loadManifest("manifests/" + gameData.level.manifestFile);
 	}
 
 	function levelEditor() {

@@ -22,6 +22,7 @@ function Game(gameData)
 	var opponent = gameData.opponent;
 	var gameCompleted = gameData.gameCompleted;
 	var camera = gameData.level.camera;
+	var assetQueue = gameData.assetQueue;
 	
 	//self reference
 	var self = this;
@@ -79,7 +80,9 @@ function Game(gameData)
 		switch (state) {
 			case GameStates.INITIALIZING:
 				//create and add background
-				parallaxBackground = new ParallaxBackground(level.background, camera);
+				parallaxBackground = new ParallaxBackground(
+					new createjs.Bitmap(assetQueue.getResult("background")), 
+					camera);
 				canvasManager.stage.addChild(parallaxBackground.img);
 				parallaxBackground.update(camera);
 

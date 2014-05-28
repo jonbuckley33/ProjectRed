@@ -1,0 +1,8 @@
+{
+	"manifest" : [
+		{
+			"id" : "background",
+			"src" : "art/backgroundv3.png"
+		}
+	]
+}
