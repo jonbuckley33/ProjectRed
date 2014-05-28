@@ -17,9 +17,9 @@ function Game(gameData)
 	//get parameters
 	var canvasManager = gameData.canvasManager;
 	var world = gameData.level.world;
-	var hero = gameData.heroMaker(world);
-	var opponent = gameData.opponent;
 	var level = gameData.level;
+	var hero = gameData.heroMaker(level);
+	var opponent = gameData.opponent;
 	var gameCompleted = gameData.gameCompleted;
 	var camera = gameData.level.camera;
 	

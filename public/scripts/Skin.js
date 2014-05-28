@@ -55,6 +55,7 @@ function Skin(camera){
 		shapeRadius = coord.x;
 		shape.graphics.beginFill(color).drawCircle(0, 0, shapeRadius);
 		radSize = radius;
+		this.setType("shape");
 		skin = shape;				
 	}
 
@@ -65,6 +66,7 @@ function Skin(camera){
 		shapeHeight = coord.y;
 		xSize = width;
 		ySize = height;
+		this.setType("shape");
 		shape.graphics.beginFill(color).drawRect(-shapeWidth/2, -shapeHeight/2, shapeWidth,shapeHeight);
 		skin = shape;
 	}
@@ -79,7 +81,7 @@ function Skin(camera){
 			sprite.x = x;
 			sprite.y = y;
 		}
-		//this.getSkin();
+		this.getSkin();
 	}
 
 	this.setRotation = function(rot){

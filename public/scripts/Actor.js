@@ -55,7 +55,7 @@ function Actor(skin, body)
 
 	*/
 	this.setAnimation = function(str) {
-		
+
 		if (this.skin.getAnimation() != str) {
 			this.skin.setAnimation(str);
 		}
