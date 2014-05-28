@@ -1,0 +1,28 @@
+{
+  "name": "ProjectRed",
+  "version": "0.0.0",
+  "description": "javascript platformer",
+  "main": "backend.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jonbuckley33/ProjectRed.git"
+  },
+  "keywords": [
+    "js",
+    "platformer",
+    "space"
+  ],
+  "author": "JJLW",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jonbuckley33/ProjectRed/issues"
+  },
+  "homepage": "https://github.com/jonbuckley33/ProjectRed",
+  "dependencies": {
+    "express": "^4.3.0",
+    "logfmt": "^1.1.2"
+  }
+}

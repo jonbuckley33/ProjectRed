@@ -1,4 +1,4 @@
-var http = require("http"),
+/*var http = require("http"),
     url = require("url"),
     path = require("path"),
     fs = require("fs")
@@ -44,3 +44,16 @@ http.createServer(function(request, response) {
 }).listen(parseInt(port, 10));
 
 console.log("Static file server running at\n  => http://localhost:" + port + "/\nCTRL + C to shutdown");
+*/
+var express = require("express");
+var logfmt = require("logfmt");
+var app = express();
+
+app.use(logfmt.requestLogger());
+
+app.use(express.static(__dirname + '/public'));
+
+var port = Number(process.env.PORT || 5000);
+app.listen(port, function() {
+  console.log("Listening on " + port);
+});
