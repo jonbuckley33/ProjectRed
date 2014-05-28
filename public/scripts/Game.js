@@ -60,8 +60,10 @@ function Game(gameData)
 	//camera instance
 	var camera = new Camera(
 		new b2Vec2(12, 6), 
-		{width : 24, height: 12}, 
-		level.bounds);
+		{width : 24, height: 12},
+		level.bounds,
+		{width : canvasManager.getCanvasWidth(),
+		 height : canvasManager.getCanvasHeight()});
 	level.camera = camera;
 
 	var hero;
