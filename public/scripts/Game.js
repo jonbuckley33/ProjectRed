@@ -63,6 +63,7 @@ function Game(gameData)
 		{width : 24, height: 12}, 
 		level.bounds);
 
+
 	function spawnHero() {
 		//puts hero above spawn
 		var startPos = level.start.body.GetBody().GetPosition();
