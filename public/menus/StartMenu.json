@@ -16,6 +16,22 @@
                 }
             },
             "func" : "startGame"
+        },
+        {
+            "name" : "other",
+            "x" : 500,
+            "y" : 350,
+            "filepath" : "images/other_btn.png",
+            "animDef": {
+                "width": 100,
+                "height": 30,
+                "bounds": {
+                    "out": {"start": 0, "end": 0},
+                    "over": {"start": 1, "end": 1},
+                    "down": {"start": 2, "end": 2}
+                }
+            },
+            "func" : "otherFunction"
         }
     ]
 }
