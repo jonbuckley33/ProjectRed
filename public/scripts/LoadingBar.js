@@ -100,6 +100,8 @@ function LoadingBar() {
         if (initted) {
             cm.stage.removeChild(loadBg);
             cm.stage.removeChild(loadBar);
+            cm = undefined;
+            initted = false;
         } else throw "Cannot destroy un-initted loading bar";
     }
 }
