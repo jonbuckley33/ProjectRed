@@ -6,7 +6,7 @@
 		"top" : 0,
 		"bottom" : 15
 	},
-	"background" : "backgroundv2.png",
+	"background" : "backgroundv3.png",
 	"animations" : {
 					"hero" : {
 							"frameWidth" : 64,
