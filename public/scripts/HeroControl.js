@@ -69,13 +69,13 @@ function HeroControl(hero) {
 			hero.body.GetBody().GetWorldCenter());	
 
 		//update animation
-		/*if (dirX < 0){
+		if (dirX < 0){
 			hero.setAnimation("walkl");
 		}else if (dirX > 0){
 			hero.setAnimation("walkr");
 		}else{
 			hero.setAnimation("idle");
-		}*/
+		}
 	};
 
 	/*
@@ -100,6 +100,6 @@ function HeroControl(hero) {
 			hero.body.GetBody().GetWorldCenter());	
 
 		//chill out our hero
-		//hero.setAnimation("idle");
+		hero.setAnimation("idle");
 	};
 }

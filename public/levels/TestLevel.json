@@ -12,7 +12,7 @@
 					"hero" : {
 							"frameWidth" : 64,
 							"frameHeight" : 64,
-							"filepath" : "../images/Monster.png",
+							"UID" : "monster_animation",
 							"startingAnim" : 0,
 							"animations" : [
 								{

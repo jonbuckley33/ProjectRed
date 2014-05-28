@@ -83,7 +83,7 @@ LevelLoader.MakeHydrate = function(actorDef) {
 		Actor
 
 */
-LevelLoader.hydrate = function(actorDef, world, cm, animations, camera) {
+LevelLoader.hydrate = function(actorDef, world, cm, animations, camera, assetQueue) {
 	var bodyDef = new b2BodyDef;
 	var fixDef = new b2FixtureDef;
 	var skin = new Skin();
@@ -134,16 +134,14 @@ LevelLoader.hydrate = function(actorDef, world, cm, animations, camera) {
 				if ("animationDef" in actorDef.graphics){
 					var anim = actorDef.graphics.animationDef;
 					var start = 0;
-					var sizeW = 1;
-					var sizeH = 1;
 					if (anim in animations){
-						animDef = animations[anim]
+						var animDef = animations[anim];
 						if ("startingAnim" in animDef) start = animDef.startingAnim
 						if ("width" in actorDef) sizeW = actorDef.width;
 						if ("height" in actorDef) sizeH = actorDef.height;
 						
-						skin.loadAnimation(animDef.frameWidth,animDef.frameHeight,animDef.filepath
-										  ,start,animDef.animations,sizeW,sizeH);
+						skin.loadAnimation(animDef.frameWidth,animDef.frameHeight,animDef.UID
+										  ,assetQueue,start,animDef.animations);
 
 						fixDef.shape = new b2PolygonShape;
 						fixDef.shape.SetAsBox(Converter.canvasToGame(animDef.frameWidth/2)

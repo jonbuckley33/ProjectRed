@@ -115,17 +115,18 @@ function Skin(){
 		this.updateSkin(); 
 	}
 
-	this.loadAnimation = function(w,h,path,start,anims,sizeW,sizeH){
-		frameWidth = w;
-		frameHeight = h;
-		xSize = frameWidth;
-		ySize = frameHeight;
-		filePath = path;
+	this.loadAnimation = function(fWidth, fHeight, UID,assetQueue,start,anims){
 		startingAnim = start;
 		animations = anims;
 
-		image = new Image();
-		image.src = path;
+		//set size of actor
+        frameWidth = fWidth;
+		frameHeight = fHeight;
+		xSize = frameWidth;
+		ySize = frameHeight;
+
+		//get animation resource
+		image = assetQueue.getResult(UID);
 
 		animations = {};
 		for (i = 0; i < anims.length; i++){
@@ -139,13 +140,11 @@ function Skin(){
         });
 
         sprite = new createjs.Sprite(spriteSheet);
-
         sprite.vX = 1;
 
-        this.setSize(sizeW,sizeH);
+        //this.setScale(scale);
         skin = sprite;
 		return sprite;
-
 	}
 
 	this.getAnimation = function(){
