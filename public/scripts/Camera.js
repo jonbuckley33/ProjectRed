@@ -1,6 +1,6 @@
 var oneMeter = 50; // pixels
 
-function Camera(position, size, bounds) {
+function Camera(position, size, bounds, screenSize) {
 
     // Camera class
     // Contains functions for converting screen coordinates
@@ -21,17 +21,22 @@ function Camera(position, size, bounds) {
 
     this.bounds = bounds;
 
+    console.log(screenSize);
+
+    this.screenWidth = screenSize.width;
+    this.screenHeight = screenSize.height;
+
     this.origMeter = oneMeter;
 
     this.elasticity = 0.2;
 
     // Converts a world b2vec2 position into x and y screen coordinates
     this.worldToScreen = function(point) {
-        var screenX = point.x - this.position.x + this.width/2;
-        var screenY = point.y - this.position.y + this.height/2;
+        var screenX = (point.x - this.position.x) * oneMeter
+        var screenY = (point.y - this.position.y) * oneMeter
         return {
-            x: screenX * oneMeter,
-            y: screenY * oneMeter
+            x: screenX + this.screenWidth/2,
+            y: screenY + this.screenHeight/2
         };
     }
 
@@ -85,8 +90,10 @@ function Camera(position, size, bounds) {
         }
         var wantPosition = targetActor.body.GetBody().GetPosition();
 
-        var dx = wantPosition.x - this.position.x + offset.x;
-        var dy = wantPosition.y - this.position.y + offset.y;
+        var scale = this.getScale();
+
+        var dx = (wantPosition.x - this.position.x + offset.x*scale);
+        var dy = (wantPosition.y - this.position.y + offset.y*scale);
 
         this.move((dx) * this.elasticity,
                   (dy) * this.elasticity);

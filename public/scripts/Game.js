@@ -62,7 +62,8 @@ function Game(gameData)
 	var camera = new Camera(
 		new b2Vec2(12, 6), 
 		{width : 24, height: 12}, 
-		level.bounds);
+		level.bounds,
+		42);
 
 
 	function spawnHero() {
