@@ -18,10 +18,8 @@ function Game(gameData)
 	var canvasManager = gameData.canvasManager;
 	var world = gameData.level.world;
 	var level = gameData.level;
-	var hero = gameData.heroMaker(level);
 	var opponent = gameData.opponent;
 	var gameCompleted = gameData.gameCompleted;
-	var camera = gameData.level.camera;
 	var assetQueue = gameData.assetQueue;
 	
 	//self reference
@@ -45,7 +43,7 @@ function Game(gameData)
 	var heroController;
 
 	//array of actors in game
-	var actors = level.actors;
+	var actors = [];
 	//actors.push(opponent);
 
 	//actors to delete on next update
@@ -61,14 +59,16 @@ function Game(gameData)
 	//camera instance
 	var camera = new Camera(
 		new b2Vec2(12, 6), 
-		{width : 24, height: 12}, 
+		{width : 24, height: 12},
 		level.bounds,
-		42);
+		{width : canvasManager.getCanvasWidth(),
+		 height : canvasManager.getCanvasHeight()});
+	level.camera = camera;
+	var hero = gameData.heroMaker(level);
 
-
-	function spawnHero() {
+	function spawnHero(start) {
 		//puts hero above spawn
-		var startPos = level.start.body.GetBody().GetPosition();
+		var startPos = start.body.GetBody().GetPosition();
 		var heroPos = new b2Vec2(startPos.x, startPos.y - 3);
 		hero.body.GetBody().SetPosition(heroPos);
 
@@ -87,7 +87,28 @@ function Game(gameData)
 				canvasManager.stage.addChild(parallaxBackground.img);
 				parallaxBackground.update(camera);
 
-				spawnHero();
+				//make start and end
+				var makeStartEnd = level.startEnd;
+				var start = makeStartEnd.start(world, canvasManager, 
+					level.animations, camera);
+				var end = makeStartEnd.end(world, canvasManager, 
+					level.animations, camera);
+				end.classes.push("end");
+
+				actors.push(start);
+				actors.push(end);
+
+				spawnHero(start);
+
+				//finish making actors
+				for (var i = 0; i < level.actors.length; i++) {
+					var makeActor = level.actors[i];
+					var actor = makeActor(world, canvasManager, 
+						level.animations, camera);
+
+					//push to stack
+					actors.push(actor);
+				}
 
 				//construct collision handler
 				collisionHandler = new CollisionHandler(self);

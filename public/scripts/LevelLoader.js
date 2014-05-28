@@ -60,6 +60,13 @@ var defaultFriction = 0.4;
 var defaultColor = "blue";
 var defaultRestitution = 0.1;
 
+LevelLoader.MakeHydrate = function(actorDef) {
+	return function(world, cm, animations, camera) {
+		return LevelLoader.hydrate(actorDef, world, cm, animations, camera);
+	};
+};
+
+
 /*
 	Function: hydrate
 
@@ -67,16 +74,16 @@ var defaultRestitution = 0.1;
 
 	Parameters: 
 
-		actorDef - actor definition
 		world - Box2D world
 		cm - Canvas Manager
+		camera - camera instance
 
 	Returns:
 
 		Actor
 
 */
-LevelLoader.hydrate = function(actorDef, world, cm,animations,camera) {
+LevelLoader.hydrate = function(actorDef, world, cm, animations, camera) {
 	var bodyDef = new b2BodyDef;
 	var fixDef = new b2FixtureDef;
 	var skin = new Skin();
@@ -98,9 +105,10 @@ LevelLoader.hydrate = function(actorDef, world, cm,animations,camera) {
 						case "circ":
 						fixDef.shape = new b2CircleShape(
 		        		   	shape.radius //radius
-		        		   	); 
+		        		); 
 
-						skin.loadCircle(camera.worldToScreenSize(shape.radius),color);
+						skin.loadCircle(camera.worldToScreenSize(shape.radius),
+							color);
 						break;
 
 						case "rect":
@@ -154,32 +162,32 @@ LevelLoader.hydrate = function(actorDef, world, cm,animations,camera) {
 		}
 	}
 
-    //extract position
-    if ("position" in actorDef) {
-    	bodyDef.position.x = actorDef.position.x;
-    	bodyDef.position.y = actorDef.position.y;
+	 //extract position
+	 if ("position" in actorDef) {
+	 	bodyDef.position.x = actorDef.position.x;
+	 	bodyDef.position.y = actorDef.position.y;
 
-    	skin.setPosition(actorDef.position.x,actorDef.position.y);
-    } else {
-    	//default to placing in top left
-    	bodyDef.position.x = 0;
-    	bodyDef.position.y = 0;
+	 	skin.setPosition(actorDef.position.x,actorDef.position.y);
+	 } else {
+	 	//default to placing in top left
+	 	bodyDef.position.x = 0;
+	 	bodyDef.position.y = 0;
 
-    	skin.setPosition(0,0);
-    }
+	 	skin.setPosition({x : 0, y: 0});
+	 }
 
-    //extract rotation
-    if ("rotation" in actorDef) {
-    	bodyDef.angle = actorDef.rotation * (Math.PI/180);
-    	skin.setRotation(actorDef.rotation);
-    } else {
-    	//default to no rotation
-    	bodyDef.angle = 0;
-    	skin.setRotation(0);
-    }
-    
-    //define the body to be static or dynamic
-    if (!("fixed" in actorDef) || !actorDef.fixed) {
+	 //extract rotation
+	 if ("rotation" in actorDef) {
+	 	bodyDef.angle = actorDef.rotation * (Math.PI/180);
+	 	skin.setRotation(actorDef.rotation);
+	 } else {
+	 	//default to no rotation
+	 	bodyDef.angle = 0;
+	 	skin.setRotation(0);
+	 }
+	 
+	 //define the body to be static or dynamic
+	 if (!("fixed" in actorDef) || !actorDef.fixed) {
 		//the def doesn't contain whether fixed is defined, or it is set to false
 		//either way, we create a dynamic body here
 
@@ -236,21 +244,19 @@ LevelLoader.hydrate = function(actorDef, world, cm,animations,camera) {
 
 		<LevelLoader.hydrate>
 */
-function loadStartEnd(levelDef, world, cm,animations,camera) {
+function loadStartEnd(levelDef) {
 	if ("start" in levelDef && "end" in levelDef) {
 		//hydrate the actors playing the start and end 
 
-		var start = LevelLoader.hydrate(levelDef.start, world, cm,animations,camera),
-			end = LevelLoader.hydrate(levelDef.end, world, cm,animations,camera);
-
-		start.classes.push("start");
-		end.classes.push("end");
+		var start = LevelLoader.MakeHydrate(levelDef.start),
+			end = LevelLoader.MakeHydrate(levelDef.end);
 
 		//return pair of them
 		return {start : start, end : end};
 	} else {
 		throw "No start/end defined in level definition";
 	}
+	
 }
 
 var defaultGravity = new b2Vec2(0, 10);
@@ -288,7 +294,9 @@ LevelLoader.load = function(fileName, callback, cm, camera)
 			var animations;
 			if ("animations" in level){
 				animations = level.animations;
-			}else throw "No animation library"
+			} else {
+				throw "No animation library"	
+			} 
 
 			//loads manifest file string for preloading
 			var manifestFile = ("manifestFile" in level) ? 
@@ -312,20 +320,14 @@ LevelLoader.load = function(fileName, callback, cm, camera)
 			var hero;
 
 			//gets beginning and ending of level
-			var startEnd = loadStartEnd(level, world, cm,animations,camera);
-			var start = startEnd.start,
-				end = startEnd.end;
-
-			actors.push(start); 
-			actors.push(end);
+			var startEnd = loadStartEnd(level);
 
 			//populate static actors 
 			if ("staticActors" in level) {
 				for (var i = 0; i < level.staticActors.length; i++)
 				{
-					debug.log("l");
 					var actorDef = level.staticActors[i];
-					var actor = LevelLoader.hydrate(actorDef, world, cm,animations,camera);
+					var actor = LevelLoader.MakeHydrate(actorDef);
 
 					actors.push(actor);
 				}
@@ -339,7 +341,7 @@ LevelLoader.load = function(fileName, callback, cm, camera)
 				for (var i = 0; i < level.dynamicActors.length; i++)
 				{
 					var actorDef = level.dynamicActors[i];
-					var actor = LevelLoader.hydrate(actorDef, world, cm,animations,camera);
+					var actor = LevelLoader.MakeHydrate(actorDef);
 
 					actors.push(actor);
 				}
@@ -350,11 +352,11 @@ LevelLoader.load = function(fileName, callback, cm, camera)
 
 			callback({
 				actors : actors,
-				start : start,
-				end : end,
 				world : world,
 				bounds : levelBounds,
-				manifestFile : manifestFile
+				manifestFile : manifestFile,
+				startEnd : startEnd,
+				animations : animations
 			});
 		},
 
