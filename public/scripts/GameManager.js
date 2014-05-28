@@ -38,7 +38,6 @@ function GameManager()
 		assetQueue.on("complete", function() {
 			//removes loading bar from screen
 			loadingBar.destroy();
-			sounds.playSound("background",false);
 			
 			//reset listeners
 			assetQueue.removeAllEventListeners();
@@ -142,6 +141,9 @@ function GameManager()
 			//proceed to start screen
 			playGame();
 		});
+
+
+		sounds.playSound("background",false);
 
 		//load initial manifest
 		gameData.assetQueue = assetQueue;
