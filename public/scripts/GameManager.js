@@ -142,8 +142,7 @@ function GameManager()
 			playGame();
 		});
 
-
-		sounds.playSound("background",false);
+		//sounds.playSound("background",false);
 
 		//load initial manifest
 		gameData.assetQueue = assetQueue;
