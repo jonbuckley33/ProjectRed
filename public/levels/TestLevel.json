@@ -36,7 +36,7 @@
 	"gravity" : 10.0,
 	"start" : {
 			"fixed" : true,
-			"position" : {"x" : 4, "y" : 4},
+			"position" : {"x" : 4, "y" : 10},
 			"graphics" : {
 				"type" : "shape",
 				"shapeDef" : {
@@ -48,7 +48,7 @@
 		},
 	"end" : {
 			"fixed" : true,
-			"position" : {"x" : 20, "y" : 5},
+			"position" : {"x" : 20, "y" : 11},
 			"graphics" : {
 				"type" : "shape",
 				"shapeDef" : {
@@ -63,7 +63,7 @@
 			"name" : "ground",
 			"fixed" : true,
 			"rotation" : "0",
-			"position" : {"x" : 10, "y" : 8},
+			"position" : {"x" : 10, "y" : 14},
 			"graphics" : {
 				"type" : "shape",
 				"shapeDef" : {
@@ -80,7 +80,7 @@
 			"fixed" : true,
 			"rotation" : "0",
 			"friction" : 0.1,
-			"position" : {"x" : 12, "y" : 5},
+			"position" : {"x" : 12, "y" : 11},
 			"graphics" : {
 				"type" : "shape",
 				"shapeDef" : {
