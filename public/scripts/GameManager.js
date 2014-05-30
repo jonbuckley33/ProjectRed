@@ -153,6 +153,7 @@ function GameManager()
 
 	}
 
+	var game;
 	function playGame() {
 		gameData.gameCompleted = function(postgameReport) {
 			//temporary 
@@ -160,9 +161,13 @@ function GameManager()
 		};
 
 		//construct actual game
-		var game = new Game(gameData);
+		game = new Game(gameData);
 		game.start();
 	}
+
+	this.getGame = function() {
+		return game;
+	};
 
 	this.start = function()
 	{

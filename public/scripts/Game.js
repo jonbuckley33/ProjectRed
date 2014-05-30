@@ -68,6 +68,10 @@ function Game(gameData)
 
 	var hero;
 
+	this.getHero = function() {
+		return hero;
+	};
+
 	function spawnHero(start) {
 		hero = gameData.heroMaker(world, canvasManager, level.animations, 
 			camera, assetQueue);
