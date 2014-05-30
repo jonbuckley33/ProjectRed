@@ -40,8 +40,10 @@ function Camera(position, size, bounds, screenSize) {
 
     // Converts a screen position into a world b2vec2 position
     this.screenToWorld = function(x, y) {
-        var worldX = x / oneMeter + this.position.x - this.width/2;
-        var worldY = y / oneMeter + this.position.y - this.height/2;
+        var screenX = x - this.screenWidth/2;
+        var screenY = y - this.screenHeight/2;
+        var worldX = screenX / oneMeter + this.position.x;
+        var worldY = screenY / oneMeter + this.position.y;
         return new b2Vec2(worldX, worldY);
     }
 
