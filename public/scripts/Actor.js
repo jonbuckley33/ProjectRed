@@ -2,7 +2,10 @@ function Actor(skin, body)
 {
 	/* copied from online */
 	this.body = body;
-	this.body.GetBody().SetUserData(this);
+
+	//sets up cyclical reference
+	//this will help us associate the box2d obj with the actor
+	this.body.SetUserData(this);
 	this.skin = skin;
 	this.isHero = false;
 	this.classes = [];
@@ -65,9 +68,6 @@ function Actor(skin, body)
 		}*/
 	};
 
-	//this will help us associate the box2d obj with the actor
-	this.body.SetUserData(this);
-
 	this.setupMouseEvents = function(camera) {
 		//sets up mouse events
 		this.skin.getSkin().on("mousedown", function(evt) {
@@ -87,5 +87,8 @@ function Actor(skin, body)
 	    	body.GetBody().SetSleepingAllowed(true);
 		});
 	}
-	
 }
+
+Actor.Hydrate = function(actorDef, world, camera, canvasManager, assetQueue) {
+
+};

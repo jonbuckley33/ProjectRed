@@ -21,17 +21,21 @@ function GameManager()
 		gameData.canvasManager = canvasManager;
 
 		loadingBar = new LoadingBar();
-		loadingBar.init(canvasManager);
 
-		loadResources();
-	}
-
-	function loadResources() {
 		//instantiate pipeline
 		assetQueue = new createjs.LoadQueue();
 		assetQueue.installPlugin(createjs.Sound);
-		//load music
-		sounds = new Sounds();
+
+		loadResources("manifests/scriptsManifest.json", loadStartScreen);
+	}
+
+	function loadStartScreen()
+	{
+		loadResources("manifests/initialManifest.json", startScreen);
+	}
+
+	function loadResources(manifestPath, continueFunc) {
+		loadingBar.init(canvasManager);
 
 		//setup progress bar updater, and complete handler
 		assetQueue.on("progress", loadingBar.progress);
@@ -42,14 +46,11 @@ function GameManager()
 			//reset listeners
 			assetQueue.removeAllEventListeners();
 
-			//proceed to start screen
-			startScreen();
+			//proceed to next part of program
+			continueFunc();
 		});
 
-		//load initial manifest
-		assetQueue.loadManifest("manifests/initialManifest.json");
-
-		assetQueue.loadManifest(sounds.manifest);
+		assetQueue.loadManifest(manifestPath);
 	}
 
 	function startScreen() {

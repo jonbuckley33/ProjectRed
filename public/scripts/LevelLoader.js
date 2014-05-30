@@ -160,7 +160,7 @@ LevelLoader.hydrate = function(actorDef, world, cm, animations, camera, assetQue
 	}
 
 	var body = world.CreateBody(bodyDef).CreateFixture(fixDef);
-	var actor = new Actor(skin, body);
+	var actor = new GameObject(skin, body);
 
 	//get class information
 	if ("classes" in actorDef) {

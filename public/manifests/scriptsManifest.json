@@ -1,0 +1,64 @@
+{
+	"manifest" : [
+		{
+			"src" : "scripts/Debug.js"
+		}, 
+		{
+			"src" : "scripts/Timer.js"
+		},
+		{
+			"src" : "scripts/Sounds.js"
+		},
+		{
+			"src" : "scripts/LoadingBar.js"
+		},
+		{
+			"src" : "scripts/LevelLoader.js"
+		},
+		{
+			"src" : "scripts/CollisionHandler.js"
+		},
+		{
+			"src" : "scripts/CanvasManager.js"
+		},
+		{
+			"src" : "scripts/Skin.js"
+		},
+		{
+			"src" : "scripts/Actor.js"
+		},
+		{
+			"src" : "scripts/GameObject.js"
+		},
+		{
+			"src" : "scripts/Keyboard.js"
+		},
+		{
+			"src" : "scripts/Camera.js"
+		},
+		{
+			"src" : "scripts/HeroControl.js"
+		},
+		{
+			"src" : "scripts/Menu.js"
+		},
+		{
+			"src" : "scripts/StartScreen.js"
+		},
+		{
+			"src" : "scripts/HeroSelect.js"
+		},
+		{
+			"src" : "scripts/LevelSelect.js"
+		},
+		{
+			"src" : "scripts/Game.js"
+		},
+		{
+			"src" : "scripts/ParallaxBackground.js"
+		},
+		{
+			"src" : "scripts/Converter.js"
+		}
+	]
+}
