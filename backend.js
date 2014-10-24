@@ -8,17 +8,21 @@ app.use(logfmt.requestLogger());
 
 app.get("/", function(req, res) {
   var page = bliss.compileFile('views/index');
-  var output = bliss.render('views/layout', "Index", page);
+  var output = bliss.render('views/layout', "Index", page, "home");
   res.send(output);
 });
 
 app.get("/projects", function(req, res) {
-  res.redirect("/projectred/")
+  var page = bliss.compileFile('views/projects');
+  var output = bliss.render('views/layout', "Index", page, "projects");
+
+  res.send(output);
 });
 
 app.get("/contact", function(req, res) {
   var page = bliss.compileFile('views/contact');
-  var output = bliss.render('views/layout', "Index", page);
+  var output = bliss.render('views/layout', "Index", page, "contact");
+
   res.send(output);
 });
 
