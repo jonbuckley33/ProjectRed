@@ -1,0 +1,65 @@
+<div class="row">
+	<div class="col-md-2"> </div>
+	<div class="col-md-8">
+		<div class="jumbotron">
+		  	<h2>How Long Until BHPH?</h2>
+			<hr/>
+			<h1 id="clock"> 00:00 </h1>
+		</div>
+	</div>
+	<div class="col-md-2"></div>
+</div>
+
+<script   src="https://code.jquery.com/jquery-2.2.3.min.js"   integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo="   crossorigin="anonymous"></script>
+
+<script>
+
+var timer = $("#clock");
+// May 09 2016 12:00:00
+var BHPH_DATE = 1462795200000;
+
+// Milliseconds in a second.
+var MILLIS_IN_SECOND = 1000;
+// Milliseconds in a minute.
+var MILLIS_IN_MINUTE = MILLIS_IN_SECOND * 60;
+// Milliseconds in an hour.
+var MILLIS_IN_HOUR = MILLIS_IN_MINUTE * 60;
+// Milliseconds in a day.
+var MILLIS_IN_DAY = MILLIS_IN_HOUR * 24;
+
+String.prototype.format = function () {
+  var args = arguments;
+  return this.replace(/\{(\d+)\}/g, function (m, n) { return args[n]; });
+};
+
+function updateCountdown() {
+	var delta = BHPH_DATE - Date.now();
+
+	var days = Math.trunc(delta / MILLIS_IN_DAY);
+
+	// Subtract out the days we've already calculated.
+	delta -= (days * MILLIS_IN_DAY);
+
+	var hours = Math.trunc(delta / MILLIS_IN_HOUR);
+
+	// Subtract out the hours we've already calculated.
+	delta -= (hours * MILLIS_IN_HOUR);
+
+	var minutes = Math.trunc(delta / MILLIS_IN_MINUTE);
+
+	// Subtract out the minutes we've already calculated.
+	delta -= (minutes * MILLIS_IN_MINUTE);
+
+	var seconds = Math.trunc(delta / MILLIS_IN_SECOND);
+
+	var toSet = "{0} days {1} hours {2}:{3}".format(days, hours, minutes, seconds);
+	timer.text(toSet);
+}
+
+// Update clock once immediately.
+updateCountdown();
+
+// Every 500 ms update clock.
+setInterval(updateCountdown, 500);
+
+</script>
