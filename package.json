@@ -4,7 +4,9 @@
   "description": "javascript platformer",
   "main": "backend.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy": "glcoud app deploy",
+    "start": "node backend.js"
   },
   "repository": {
     "type": "git",
@@ -23,6 +25,7 @@
   "homepage": "https://github.com/jonbuckley33/ProjectRed",
   "dependencies": {
     "express": "^4.3.0",
-    "logfmt": "^1.1.2"
+    "logfmt": "^1.1.2",
+    "bliss": "^1.0.1"
   }
 }
